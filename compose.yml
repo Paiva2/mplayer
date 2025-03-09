@@ -1,1 +1,22 @@
-version: 3
+version: '2'
+
+services:
+  mplayer-user-db:
+    container_name: "mplayer-user-db"
+    image: 'bitnami/postgresql:16'
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${USER_DB_USERNAME}
+      POSTGRES_PASSWORD: ${USER_DB_PASSWORD}
+      POSTGRES_DB: ${USER_DB_DATABASE}
+    networks:
+      - mplayer-net
+
+networks:
+  mplayer-net:
+volumes:
+  cache:
+    driver: local
