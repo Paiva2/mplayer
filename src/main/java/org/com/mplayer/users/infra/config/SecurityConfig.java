@@ -24,6 +24,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(req ->
                 req.dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
                     .requestMatchers("/api/v1/user/register").permitAll()
+                    .requestMatchers("/api/v1/user/forgot-password").permitAll()
                     .anyRequest().authenticated()
             );
 

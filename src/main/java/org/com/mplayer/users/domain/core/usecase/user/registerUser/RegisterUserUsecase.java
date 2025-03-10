@@ -6,8 +6,8 @@ import org.com.mplayer.users.domain.core.entity.Role;
 import org.com.mplayer.users.domain.core.entity.User;
 import org.com.mplayer.users.domain.core.entity.UserRole;
 import org.com.mplayer.users.domain.core.enums.ERole;
-import org.com.mplayer.users.domain.core.usecase.common.RoleNotFoundException;
 import org.com.mplayer.users.domain.core.usecase.common.exception.InvalidFieldException;
+import org.com.mplayer.users.domain.core.usecase.common.exception.RoleNotFoundException;
 import org.com.mplayer.users.domain.core.usecase.user.registerUser.exception.UserAlreadyExistsException;
 import org.com.mplayer.users.domain.ports.in.usecase.RegisterUserUsecasePort;
 import org.com.mplayer.users.domain.ports.out.data.RoleDataProviderPort;
@@ -52,7 +52,7 @@ public class RegisterUserUsecase implements RegisterUserUsecasePort {
     }
 
     private void validateEmail(String email) {
-        if (!emailUtilsPort.validateEmail(email)) {
+        if (!emailUtilsPort.validateEmailFormat(email)) {
             throw new InvalidFieldException("Invalid e-mail format!");
         }
     }

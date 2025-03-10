@@ -18,3 +18,23 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+  mail:
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_APP_PASS}
+    protocol: 'smtp'
+    host: 'smtp.gmail.com'
+    port: 587
+  rabbitmq:
+    host: ${RABBITMQ_HOST}
+    username: ${RABBITMQ_USER}
+    password: ${RABBITMQ_PASSWORD}
+    port: 5672
+  modulith:
+    events:
+      externalization:
+        enabled: true
+      republish-outstanding-events-on-restart: true
+      events:
+        jdbc:
+          schema-initialization:
+            enabled: true

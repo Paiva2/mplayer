@@ -1,0 +1,31 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: mplayer
+  flyway:
+    schemas: public
+  datasource:
+    url: jdbc:postgresql://localhost:5432/''
+    username: ''
+    password: ''
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  mail:
+    username: ''
+    password: ''
+    protocol: 'smtp'
+    host: 'smtp.gmail.com'
+    port: 587
+  rabbitmq:
+    host: localhost
+    username: guest
+    password: guest
+    port: 5672
