@@ -1,7 +1,9 @@
 package org.com.mplayer.users.application.dto.user;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,8 +14,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegisterUserDTO {
-    @NotEmpty(message = "email can't be empty.")
-    @NotNull(message = "email can't be null.")
+    @NotNull(message = "email can't be null")
+    @NotBlank(message = "email can't be blank")
     private String email;
 
     @NotEmpty(message = "firstName can't be empty.")
@@ -26,5 +28,6 @@ public class RegisterUserDTO {
 
     @NotEmpty(message = "password can't be empty.")
     @NotNull(message = "password can't be null.")
+    @Size(min = 6, message = "password must have at least 6 characters")
     private String password;
 }

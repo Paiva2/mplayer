@@ -38,3 +38,8 @@ spring:
         jdbc:
           schema-initialization:
             enabled: true
+
+auth:
+  jwt:
+    private-rsa: ${PRIVATE_RSA}
+    public-rsa: ${PUBLIC_RSA}
