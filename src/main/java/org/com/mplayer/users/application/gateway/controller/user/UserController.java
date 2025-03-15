@@ -8,14 +8,15 @@ import org.com.mplayer.users.application.dto.user.ForgotPasswordDTO;
 import org.com.mplayer.users.application.dto.user.RegisterUserDTO;
 import org.com.mplayer.users.domain.ports.in.usecase.AuthUserUsecasePort;
 import org.com.mplayer.users.domain.ports.in.usecase.ForgotPasswordUsecasePort;
+import org.com.mplayer.users.domain.ports.in.usecase.GetProfileUsecasePort;
 import org.com.mplayer.users.domain.ports.in.usecase.RegisterUserUsecasePort;
 import org.com.mplayer.users.domain.ports.out.usecase.AuthUserOutPort;
+import org.com.mplayer.users.domain.ports.out.usecase.GetProfileOutput;
+import org.com.mplayer.users.infra.adapters.config.UserDetailsAdapter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 import static org.com.mplayer.MplayerApplication.API_PREFIX;
 
@@ -26,6 +27,7 @@ public class UserController {
     private final RegisterUserUsecasePort registerUserInputPort;
     private final ForgotPasswordUsecasePort forgotPasswordInputPort;
     private final AuthUserUsecasePort authUserUsecasePort;
+    private final GetProfileUsecasePort getProfileUsecasePort;
 
     @Transactional
     @PostMapping("/register")
@@ -43,6 +45,12 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<AuthUserOutPort> auth(@RequestBody @Valid AuthUserDTO dto) {
         AuthUserOutPort output = authUserUsecasePort.execute(dto);
+        return new ResponseEntity<>(output, HttpStatus.OK);
+    }
+
+    @GetMapping("/profile")
+    public ResponseEntity<GetProfileOutput> auth(@AuthenticationPrincipal UserDetailsAdapter authPrincipal) {
+        GetProfileOutput output = getProfileUsecasePort.execute(authPrincipal.getId());
         return new ResponseEntity<>(output, HttpStatus.OK);
     }
 }

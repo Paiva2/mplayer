@@ -10,6 +10,7 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import org.com.mplayer.users.domain.ports.out.utils.AuthUtilsPort;
+import org.com.mplayer.users.infra.exception.InvalidAuthorizationTokenException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -63,21 +64,29 @@ public class AuthUtilsAdapter implements AuthUtilsPort {
     }
 
     @Override
-    public void verify(String token) {
+    public String verify(String token, String claim) {
         try {
             String privateKeyContent = readKeyWithPath(keyPath);
             RSAKey privRsaJWK = RSAKey.parseFromPEMEncodedObjects(privateKeyContent).toRSAKey();
             RSAKey rsaPublicJWK = privRsaJWK.toPublicJWK();
 
-            SignedJWT signedJWT = SignedJWT.parse(token);
-
             JWSVerifier verifier = new RSASSAVerifier(rsaPublicJWK);
 
+            SignedJWT signedJWT = SignedJWT.parse(token);
+
             if (!signedJWT.verify(verifier)) {
-                //throw error
+                throw new InvalidAuthorizationTokenException("Invalid token!");
             }
 
-            //new Date().before(signedJWT.getJWTClaimsSet().getExpirationTime());
+            boolean isTokenExpired = new Date().after(signedJWT.getJWTClaimsSet().getExpirationTime());
+
+            if (isTokenExpired) {
+                throw new InvalidAuthorizationTokenException("Invalid token. Token is expired!");
+            }
+
+            return signedJWT.getJWTClaimsSet().getClaimAsString(claim);
+        } catch (InvalidAuthorizationTokenException e) {
+            throw e;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

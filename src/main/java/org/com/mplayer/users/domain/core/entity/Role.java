@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.com.mplayer.users.domain.core.enums.ERole;
 
 import java.util.Date;
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 public class Role {
     private Long id;
-    private String name;
+    private ERole name;
     private Date createdAt;
 
     private List<UserRole> userRoles;

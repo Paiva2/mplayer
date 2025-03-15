@@ -25,6 +25,13 @@ public class UserDataProviderAdapter implements UserDataProviderPort {
     }
 
     @Override
+    public Optional<User> findById(Long id) {
+        Optional<UserEntity> user = repository.findById(id);
+        if (user.isEmpty()) return Optional.empty();
+        return Optional.of(userMapper.toDomain(user.get()));
+    }
+
+    @Override
     public User persist(User user) {
         UserEntity newUser = repository.save(userMapper.toPersistence(user));
         return userMapper.toDomain(newUser);
