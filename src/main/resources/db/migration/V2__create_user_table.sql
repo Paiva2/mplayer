@@ -1,4 +1,4 @@
-create table tb_user (
+create table users.tb_user (
     usr_id serial primary key,
     usr_first_name varchar(100) not null,
     usr_last_name varchar(100) not null,
@@ -10,12 +10,12 @@ create table tb_user (
     usr_updated_at timestamp not null default now()
 );
 
-create sequence tb_user_id_seq
+create sequence users.tb_user_id_seq
     minvalue 1
     increment 1
     cache 1
     start 1
-    owned by tb_user.usr_id;
+    owned by users.tb_user.usr_id;
 
 CREATE FUNCTION update_updated_at_tb_user()
     RETURNS TRIGGER AS $$
@@ -26,6 +26,6 @@ CREATE FUNCTION update_updated_at_tb_user()
     $$ language 'plpgsql';
 
 CREATE TRIGGER update_users_task_updated_on
-    BEFORE UPDATE ON tb_user
+    BEFORE UPDATE ON users.tb_user
     FOR EACH ROW
     EXECUTE PROCEDURE update_updated_at_tb_user();

@@ -1,4 +1,4 @@
-create table event_publication (
+create table public.event_publication (
     id UUID primary key,
     event_type varchar(255),
     listener_id varchar,

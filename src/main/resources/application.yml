@@ -4,12 +4,10 @@ server:
 spring:
   application:
     name: mplayer
-  flyway:
-    schemas: public
   datasource:
-    url: jdbc:postgresql://${USER_DB_HOST}:5432/${USER_DB_DATABASE}
-    username: ${USER_DB_USERNAME}
-    password: ${USER_DB_PASSWORD}
+    url: jdbc:postgresql://${MPLAYER_DB_HOST}:5432/${MPLAYER_DB_DATABASE}
+    username: ${MPLAYER_DB_USERNAME}
+    password: ${MPLAYER_DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
