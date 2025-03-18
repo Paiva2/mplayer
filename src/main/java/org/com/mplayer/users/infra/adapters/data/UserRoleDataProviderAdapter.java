@@ -12,7 +12,7 @@ import java.util.List;
 
 @Component
 @AllArgsConstructor
-public class UserRoleDataProviderPortAdapter implements UserRoleDataProviderPort {
+public class UserRoleDataProviderAdapter implements UserRoleDataProviderPort {
     private final UserRoleRepositoryOrm repository;
 
     private final UserRoleMapper userRoleMapper;

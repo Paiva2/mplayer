@@ -11,7 +11,7 @@ import org.com.mplayer.users.domain.ports.in.usecase.ForgotPasswordUsecasePort;
 import org.com.mplayer.users.domain.ports.in.usecase.GetProfileUsecasePort;
 import org.com.mplayer.users.domain.ports.in.usecase.RegisterUserUsecasePort;
 import org.com.mplayer.users.domain.ports.out.usecase.AuthUserOutPort;
-import org.com.mplayer.users.domain.ports.out.usecase.GetProfileOutput;
+import org.com.mplayer.users.domain.ports.out.usecase.GetProfileOutputPort;
 import org.com.mplayer.users.infra.adapters.config.UserDetailsAdapter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,8 +49,8 @@ public class UserController {
     }
 
     @GetMapping("/profile")
-    public ResponseEntity<GetProfileOutput> auth(@AuthenticationPrincipal UserDetailsAdapter authPrincipal) {
-        GetProfileOutput output = getProfileUsecasePort.execute(authPrincipal.getId());
+    public ResponseEntity<GetProfileOutputPort> auth(@AuthenticationPrincipal UserDetailsAdapter authPrincipal) {
+        GetProfileOutputPort output = getProfileUsecasePort.execute(authPrincipal.getId());
         return new ResponseEntity<>(output, HttpStatus.OK);
     }
 }

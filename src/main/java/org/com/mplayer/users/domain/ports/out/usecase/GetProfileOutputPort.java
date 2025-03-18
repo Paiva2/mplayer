@@ -12,7 +12,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetProfileOutput {
+public class GetProfileOutputPort {
     private Long id;
     private String email;
     private String profilePicture;

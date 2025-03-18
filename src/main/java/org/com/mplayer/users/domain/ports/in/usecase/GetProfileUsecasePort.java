@@ -1,7 +1,7 @@
 package org.com.mplayer.users.domain.ports.in.usecase;
 
-import org.com.mplayer.users.domain.ports.out.usecase.GetProfileOutput;
+import org.com.mplayer.users.domain.ports.out.usecase.GetProfileOutputPort;
 
 public interface GetProfileUsecasePort {
-    GetProfileOutput execute(Long userId);
+    GetProfileOutputPort execute(Long userId);
 }

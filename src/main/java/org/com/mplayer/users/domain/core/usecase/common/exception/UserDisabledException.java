@@ -8,4 +8,8 @@ public class UserDisabledException extends ForbiddenException {
     public UserDisabledException() {
         super(DEFAULT);
     }
+
+    public UserDisabledException(String message) {
+        super(message);
+    }
 }
