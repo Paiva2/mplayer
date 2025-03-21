@@ -14,7 +14,7 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "tb_user_role")
+@Table(name = "tb_user_role", schema = "users")
 public class UserRoleEntity implements Serializable {
     @EmbeddedId
     private KeyId id;

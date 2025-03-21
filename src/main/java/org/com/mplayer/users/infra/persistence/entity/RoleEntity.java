@@ -14,11 +14,11 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "tb_role")
+@Table(name = "tb_role", schema = "users")
 public class RoleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tb_role_id_seq")
-    @SequenceGenerator(name = "tb_role_id_seq", sequenceName = "tb_role_id_seq", allocationSize = 1)
+    @SequenceGenerator(schema = "users", name = "tb_role_id_seq", sequenceName = "tb_role_id_seq", allocationSize = 1)
     @Column(name = "rl_id")
     private Long id;
 

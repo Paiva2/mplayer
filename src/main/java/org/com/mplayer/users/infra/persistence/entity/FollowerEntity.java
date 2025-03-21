@@ -12,11 +12,11 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "tb_follower")
+@Table(name = "tb_follower", schema = "users")
 public class FollowerEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tb_follower_id_seq")
-    @SequenceGenerator(name = "tb_follower_id_seq", sequenceName = "tb_follower_id_seq", allocationSize = 1)
+    @SequenceGenerator(schema = "users", name = "tb_follower_id_seq", sequenceName = "tb_follower_id_seq", allocationSize = 1)
     @Column(name = "flw_id")
     private Long id;
 

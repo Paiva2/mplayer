@@ -14,11 +14,11 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "tb_user")
+@Table(name = "tb_user", schema = "users")
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tb_user_id_seq")
-    @SequenceGenerator(name = "tb_user_id_seq", sequenceName = "tb_user_id_seq", allocationSize = 1)
+    @SequenceGenerator(schema = "users", name = "tb_user_id_seq", sequenceName = "tb_user_id_seq", allocationSize = 1)
     @Column(name = "usr_id")
     private Long id;
 
