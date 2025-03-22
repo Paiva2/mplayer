@@ -10,9 +10,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
 @Component
 @AllArgsConstructor
@@ -24,10 +21,8 @@ public class FileExternalIntegrationAdapter implements FileExternalIntegrationPo
     private final static String s3Region = "us-east-1";
 
     @Override
-    public Map<String, String> insertFile(byte[] fileBytes, String fileName, String destination, String contentType) {
+    public String insertFile(byte[] fileBytes, String fileName, String destination, String contentType) {
         try {
-            String newName = fileName.concat("_").concat(UUID.randomUUID().toString()).concat(".").concat(contentType);
-
             ByteArrayInputStream bais = new ByteArrayInputStream(fileBytes);
             bais.close();
 
@@ -35,42 +30,39 @@ public class FileExternalIntegrationAdapter implements FileExternalIntegrationPo
             objectMetadata.setContentLength(fileBytes.length);
             objectMetadata.setContentType(contentType);
 
-            s3Client.putObject(destination, newName, bais, objectMetadata);
+            s3Client.putObject(destination, fileName, bais, objectMetadata);
 
-            String url = mountUrl(destination, newName);
-
-            return new HashMap<>() {{
-                put("url", url);
-                put("id", newName);
-            }};
+            return mountUrl(destination, fileName);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public Map<String, String> insertFile(MultipartFile multipartFile, String fileIdentification, String destination, String contentType) {
+    public String insertFile(MultipartFile multipartFile, String fileName, String destination, String contentType) {
         File file = null;
 
         try {
-            String originalName = fileUtilsPort.fileNameWithoutExtension(multipartFile);
-            String newName = fileIdentification.concat("_").concat(originalName.concat("_").concat(UUID.randomUUID().toString()).concat(".").concat(fileUtilsPort.fileExtension(multipartFile)));
-
             file = fileUtilsPort.convertMultipartFileToFile(multipartFile);
 
-            s3Client.putObject(destination, newName, file);
-            String url = mountUrl(destination, newName);
+            s3Client.putObject(destination, fileName, file);
 
-            return new HashMap<>() {{
-                put("url", url);
-                put("id", newName);
-            }};
+            return mountUrl(destination, fileName);
         } catch (Exception e) {
             throw new RuntimeException(e);
         } finally {
             if (file != null && file.exists()) {
                 file.delete();
             }
+        }
+    }
+
+    @Override
+    public void removeFile(String source, String fileId) {
+        try {
+            s3Client.deleteObject(source, fileId);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 

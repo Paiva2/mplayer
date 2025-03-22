@@ -23,6 +23,7 @@ public class Music {
     private String composer;
     private Long durationSeconds;
     private EFileType fileType;
+    private String coverContentType;
     private Date createdAt;
     private String repositoryUrl;
     private String externalIdentification;

@@ -47,6 +47,9 @@ public class MusicEntity {
     @Enumerated(EnumType.STRING)
     private EFileType fileType;
 
+    @Column(name = "mus_cover_content_type")
+    private String coverContentType;
+
     @CreationTimestamp
     @Column(name = "mus_created_at")
     private Date createdAt;

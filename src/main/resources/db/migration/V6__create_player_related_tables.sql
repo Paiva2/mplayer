@@ -18,7 +18,7 @@ create sequence player.tb_collection_id_seq
 
 create index search_ext_user_id_collection on player.tb_collection (col_external_user_id);
 
-CREATE FUNCTION update_updated_at_tb_collections()
+CREATE FUNCTION player.update_updated_at_tb_collections()
     RETURNS TRIGGER AS $$
 BEGIN
     NEW.col_updated_at = now();
@@ -29,7 +29,7 @@ $$ language 'plpgsql';
 CREATE TRIGGER update_collections_task_updated_on
     BEFORE UPDATE ON player.tb_collection
     FOR EACH ROW
-EXECUTE PROCEDURE update_updated_at_tb_collections();
+EXECUTE PROCEDURE player.update_updated_at_tb_collections();
 /* */
 
 create table player.tb_music (
@@ -42,6 +42,7 @@ create table player.tb_music (
     mus_composer varchar(200) not null default 'unknown',
     mus_duration_seconds bigint not null,
     mus_file_type varchar(20) not null,
+    mus_cover_content_type varchar(20) default null,
     mus_created_at timestamp not null default now(),
     mus_repository_url varchar(255) default null,
     mus_external_user_id varchar(255) not null,
