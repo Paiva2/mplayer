@@ -25,6 +25,7 @@ public class Music {
     private EFileType fileType;
     private Date createdAt;
     private String repositoryUrl;
+    private String externalIdentification;
 
     private Lyric lyric;
     private String externalUserId;

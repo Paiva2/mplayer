@@ -57,6 +57,9 @@ public class MusicEntity {
     @Column(name = "mus_external_user_id")
     private String externalUserId;
 
+    @Column(name = "mus_external_id")
+    private String externalIdentification;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mus_collection_id")
     private CollectionEntity collection;

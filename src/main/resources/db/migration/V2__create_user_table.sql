@@ -17,7 +17,7 @@ create sequence users.tb_user_id_seq
     start 1
     owned by users.tb_user.usr_id;
 
-CREATE FUNCTION update_updated_at_tb_user()
+CREATE FUNCTION users.update_updated_at_tb_user()
     RETURNS TRIGGER AS $$
         BEGIN
             NEW.usr_updated_at = now();
@@ -28,4 +28,4 @@ CREATE FUNCTION update_updated_at_tb_user()
 CREATE TRIGGER update_users_task_updated_on
     BEFORE UPDATE ON users.tb_user
     FOR EACH ROW
-    EXECUTE PROCEDURE update_updated_at_tb_user();
+    EXECUTE PROCEDURE users.update_updated_at_tb_user();

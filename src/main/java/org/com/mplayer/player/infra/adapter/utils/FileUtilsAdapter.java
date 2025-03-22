@@ -11,7 +11,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,7 +32,6 @@ public class FileUtilsAdapter implements FileUtilsPort {
                 put("album", tag.getFirst(FieldKey.ALBUM));
                 put("genre", tag.getFirst(FieldKey.GENRE));
                 put("year", tag.getFirst(FieldKey.YEAR));
-                put("album-year", tag.getFirst(FieldKey.ALBUM_YEAR));
                 put("composer", tag.getFirst(FieldKey.COMPOSER));
                 put("cover", audioFile.getTag().getArtworkList().isEmpty() ? null : audioFile.getTag().getArtworkList().get(0).getBinaryData());
                 put("length", audioFile.getAudioHeader().getTrackLength());
@@ -48,17 +46,27 @@ public class FileUtilsAdapter implements FileUtilsPort {
     }
 
     @Override
-    public File convertMultipartFileToFile(MultipartFile multipartFile) throws IOException {
-        if (multipartFile.getOriginalFilename() == null) {
-            throw new RuntimeException("Original filename is null!");
+    public File convertMultipartFileToFile(MultipartFile multipartFile) {
+        File file = null;
+
+        try {
+            if (multipartFile.getOriginalFilename() == null) {
+                throw new RuntimeException("Original filename is null!");
+            }
+
+            file = new File(multipartFile.getOriginalFilename());
+            FileOutputStream fos = new FileOutputStream(file);
+            fos.write(multipartFile.getBytes());
+            fos.close();
+
+            return file;
+        } catch (Exception e) {
+            if (file != null && file.exists()) {
+                file.delete();
+            }
+
+            throw new RuntimeException(e);
         }
-
-        File convFile = new File(multipartFile.getOriginalFilename());
-        FileOutputStream fos = new FileOutputStream(convFile);
-        fos.write(multipartFile.getBytes());
-        fos.close();
-
-        return convFile;
     }
 
     @Override

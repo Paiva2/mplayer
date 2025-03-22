@@ -20,7 +20,7 @@ create table users.tb_user_role (
     url_updated_at timestamp not null default now()
 );
 
-CREATE FUNCTION update_updated_at_tb_user_role()
+CREATE FUNCTION users.update_updated_at_tb_user_role()
     RETURNS TRIGGER AS $$
 BEGIN
     NEW.url_updated_at = now();
@@ -31,4 +31,4 @@ $$ language 'plpgsql';
 CREATE TRIGGER update_users_task_updated_on
     BEFORE UPDATE ON users.tb_user_role
     FOR EACH ROW
-EXECUTE PROCEDURE update_updated_at_tb_user_role();
+EXECUTE PROCEDURE users.update_updated_at_tb_user_role();

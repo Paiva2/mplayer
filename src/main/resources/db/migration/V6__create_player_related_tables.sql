@@ -1,12 +1,12 @@
 /* */
 create table player.tb_collection (
-                                      col_id serial primary key,
-                                      col_title varchar(100) not null,
-                                      col_artist varchar(100) not null,
-                                      col_image_url varchar(255) default null,
-                                      col_created_at timestamp not null default now(),
-                                      col_updated_at timestamp not null default now(),
-                                      col_external_user_id varchar(255) not null
+    col_id serial primary key,
+    col_title varchar(100) not null,
+    col_artist varchar(100) not null,
+    col_image_url varchar(255) default null,
+    col_created_at timestamp not null default now(),
+    col_updated_at timestamp not null default now(),
+    col_external_user_id varchar(255) not null
 );
 
 create sequence player.tb_collection_id_seq
@@ -45,6 +45,7 @@ create table player.tb_music (
     mus_created_at timestamp not null default now(),
     mus_repository_url varchar(255) default null,
     mus_external_user_id varchar(255) not null,
+    mus_external_id varchar(255) not null unique,
     mus_collection_id serial references player.tb_collection (col_id)
 );
 
@@ -73,7 +74,7 @@ create sequence player.tb_lyric_id_seq
     start 1
     owned by player.tb_lyric.lyr_id;
 
-CREATE FUNCTION update_updated_at_tb_lyric()
+CREATE FUNCTION player.update_updated_at_tb_lyric()
     RETURNS TRIGGER AS $$
 BEGIN
     NEW.lyr_updated_at = now();
@@ -84,7 +85,7 @@ $$ language 'plpgsql';
 CREATE TRIGGER update_lyrics_task_updated_on
     BEFORE UPDATE ON player.tb_lyric
     FOR EACH ROW
-EXECUTE PROCEDURE update_updated_at_tb_lyric();
+EXECUTE PROCEDURE player.update_updated_at_tb_lyric();
 /* */
 
 /* */
@@ -104,7 +105,7 @@ create sequence player.tb_queue_id_seq
     start 1
     owned by player.tb_queue.que_id;
 
-CREATE FUNCTION update_updated_at_tb_queue()
+CREATE FUNCTION player.update_updated_at_tb_queue()
     RETURNS TRIGGER AS $$
 BEGIN
     NEW.que_updated_at = now();
@@ -115,7 +116,7 @@ $$ language 'plpgsql';
 CREATE TRIGGER update_queues_task_updated_on
     BEFORE UPDATE ON player.tb_queue
     FOR EACH ROW
-EXECUTE PROCEDURE update_updated_at_tb_queue();
+EXECUTE PROCEDURE player.update_updated_at_tb_queue();
 /* */
 
 /* */
@@ -149,7 +150,7 @@ create sequence player.tb_playlist_id_seq
 
 create index search_ext_user_id_playlist on player.tb_playlist (ply_external_user_id);
 
-CREATE FUNCTION update_updated_at_tb_playlist()
+CREATE FUNCTION player.update_updated_at_tb_playlist()
     RETURNS TRIGGER AS $$
 BEGIN
     NEW.ply_updated_at = now();
@@ -160,7 +161,7 @@ $$ language 'plpgsql';
 CREATE TRIGGER update_playlists_task_updated_on
     BEFORE UPDATE ON player.tb_playlist
     FOR EACH ROW
-EXECUTE PROCEDURE update_updated_at_tb_playlist();
+EXECUTE PROCEDURE player.update_updated_at_tb_playlist();
 /* */
 
 /* */
