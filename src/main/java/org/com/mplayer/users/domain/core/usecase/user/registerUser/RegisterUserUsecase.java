@@ -1,6 +1,7 @@
 package org.com.mplayer.users.domain.core.usecase.user.registerUser;
 
 import lombok.AllArgsConstructor;
+import org.com.mplayer.users.SendCreateUserQueueEvent;
 import org.com.mplayer.users.application.dto.user.RegisterUserDTO;
 import org.com.mplayer.users.domain.core.entity.Role;
 import org.com.mplayer.users.domain.core.entity.User;
@@ -13,6 +14,7 @@ import org.com.mplayer.users.domain.ports.in.usecase.RegisterUserUsecasePort;
 import org.com.mplayer.users.domain.ports.out.data.RoleDataProviderPort;
 import org.com.mplayer.users.domain.ports.out.data.UserDataProviderPort;
 import org.com.mplayer.users.domain.ports.out.data.UserRoleDataProviderPort;
+import org.com.mplayer.users.domain.ports.out.event.UserSendApplicationEventPort;
 import org.com.mplayer.users.domain.ports.out.utils.EmailUtilsPort;
 import org.com.mplayer.users.domain.ports.out.utils.PasswordUtilsPort;
 import org.com.mplayer.users.infra.annotation.Usecase;
@@ -29,6 +31,8 @@ public class RegisterUserUsecase implements RegisterUserUsecasePort {
     private final EmailUtilsPort emailUtilsPort;
     private final PasswordUtilsPort passwordUtilsPort;
 
+    private final UserSendApplicationEventPort userSendApplicationEventPort;
+
     @Override
     public void execute(RegisterUserDTO dto) {
         checkUserAlreadyExists(dto.getEmail());
@@ -41,6 +45,8 @@ public class RegisterUserUsecase implements RegisterUserUsecasePort {
         Role role = findRoleByName();
         UserRole userRole = fillUserRole(user, role);
         persistUserRole(userRole);
+
+        sendCreateUserQueue(user);
     }
 
     private void checkUserAlreadyExists(String email) {
@@ -95,5 +101,9 @@ public class RegisterUserUsecase implements RegisterUserUsecasePort {
 
     private void persistUserRole(UserRole userRole) {
         userRoleDataProviderPort.persist(userRole);
+    }
+
+    private void sendCreateUserQueue(User user) {
+        userSendApplicationEventPort.send(new SendCreateUserQueueEvent(user.getId().toString()));
     }
 }

@@ -1,4 +1,4 @@
-package org.com.mplayer.mail.infra.config;
+package org.com.mplayer;
 
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import static org.com.mplayer.mail.infra.config.constants.QueueConstants.*;
+import static org.com.mplayer.QueueConstants.*;
 
 
 @Configuration
@@ -28,7 +28,7 @@ public class BrokerConfig {
     private Integer port;
 
     @Bean
-    public Queue emailQueue() {
+    public Queue mailQueue() {
         return createQueue(MAIL_QUEUE);
     }
 
@@ -39,7 +39,22 @@ public class BrokerConfig {
 
     @Bean
     public Binding mailBinding() {
-        return BindingBuilder.bind(emailQueue()).to(mailExchange()).with(MAIL_RK).noargs();
+        return BindingBuilder.bind(mailQueue()).to(mailExchange()).with(MAIL_RK).noargs();
+    }
+
+    @Bean
+    public Queue playerQueue() {
+        return createQueue(PLAYER_QUEUE);
+    }
+
+    @Bean
+    public Exchange playerExchange() {
+        return ExchangeBuilder.topicExchange(PLAYER_EXCHANGE).durable(true).build();
+    }
+
+    @Bean
+    public Binding playerBinding() {
+        return BindingBuilder.bind(playerQueue()).to(playerExchange()).with(PLAYER_RK).noargs();
     }
 
     public Queue createQueue(String queueName) {

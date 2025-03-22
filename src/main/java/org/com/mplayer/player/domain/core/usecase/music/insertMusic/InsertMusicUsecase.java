@@ -1,4 +1,4 @@
-package org.com.mplayer.player.domain.core.usecase.insertMusic;
+package org.com.mplayer.player.domain.core.usecase.music.insertMusic;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -7,7 +7,7 @@ import org.com.mplayer.player.domain.core.entity.Lyric;
 import org.com.mplayer.player.domain.core.entity.Music;
 import org.com.mplayer.player.domain.core.enums.EFileType;
 import org.com.mplayer.player.domain.core.usecase.common.exception.InvalidContentTypeException;
-import org.com.mplayer.player.domain.core.usecase.insertMusic.exception.MusicAlreadyAddedByUserException;
+import org.com.mplayer.player.domain.core.usecase.music.insertMusic.exception.MusicAlreadyAddedByUserException;
 import org.com.mplayer.player.domain.ports.in.usecase.InsertMusicUsecasePort;
 import org.com.mplayer.player.domain.ports.out.data.CollectionDataProviderPort;
 import org.com.mplayer.player.domain.ports.out.data.LyricDataProviderPort;

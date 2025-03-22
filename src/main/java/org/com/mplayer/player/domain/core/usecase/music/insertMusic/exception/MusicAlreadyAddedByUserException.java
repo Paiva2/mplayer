@@ -1,4 +1,4 @@
-package org.com.mplayer.player.domain.core.usecase.insertMusic.exception;
+package org.com.mplayer.player.domain.core.usecase.music.insertMusic.exception;
 
 import org.com.mplayer.ConflictException;
 

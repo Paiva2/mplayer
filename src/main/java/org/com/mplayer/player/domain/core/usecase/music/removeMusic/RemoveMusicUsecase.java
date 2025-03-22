@@ -1,4 +1,4 @@
-package org.com.mplayer.player.domain.core.usecase.removeMusic;
+package org.com.mplayer.player.domain.core.usecase.music.removeMusic;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
