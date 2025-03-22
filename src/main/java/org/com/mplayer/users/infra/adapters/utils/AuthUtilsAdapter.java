@@ -23,10 +23,10 @@ import java.util.Date;
 @Component
 public class AuthUtilsAdapter implements AuthUtilsPort {
     @Value("${auth.jwt.private-rsa}")
-    private String keyPath;
+    private String privateKeyPath;
 
     @Value("${auth.jwt.public-rsa}")
-    private String publicKey;
+    private String publicKeyPath;
 
     private final static Integer EXP_TIME_SECONDS = 25200; // 7h in seconds
     private final static String TOKEN_ISSUER = "mPlayer-app";
@@ -36,7 +36,7 @@ public class AuthUtilsAdapter implements AuthUtilsPort {
         try {
             Date now = new Date();
 
-            String privateKeyContent = readKeyWithPath(keyPath);
+            String privateKeyContent = readKeyWithPath(privateKeyPath);
 
             RSAKey privRsaJWK = RSAKey.parseFromPEMEncodedObjects(privateKeyContent).toRSAKey();
 
@@ -66,11 +66,10 @@ public class AuthUtilsAdapter implements AuthUtilsPort {
     @Override
     public String verify(String token, String claim) {
         try {
-            String privateKeyContent = readKeyWithPath(keyPath);
-            RSAKey privRsaJWK = RSAKey.parseFromPEMEncodedObjects(privateKeyContent).toRSAKey();
-            RSAKey rsaPublicJWK = privRsaJWK.toPublicJWK();
+            String publicKeyContent = readKeyWithPath(publicKeyPath);
+            RSAKey pubRsaJWK = RSAKey.parseFromPEMEncodedObjects(publicKeyContent).toRSAKey();
 
-            JWSVerifier verifier = new RSASSAVerifier(rsaPublicJWK);
+            JWSVerifier verifier = new RSASSAVerifier(pubRsaJWK);
 
             SignedJWT signedJWT = SignedJWT.parse(token);
 

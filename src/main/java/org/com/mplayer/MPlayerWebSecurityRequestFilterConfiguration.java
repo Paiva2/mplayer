@@ -33,35 +33,44 @@ public class MPlayerWebSecurityRequestFilterConfiguration extends OncePerRequest
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String token = getToken(request);
+        try {
+            String token = getToken(request);
 
-        String tokenSubject = authUtilsPort.verify(token, "sub");
+            String tokenSubject = authUtilsPort.verify(token, "sub");
 
-        if (tokenSubject == null) {
-            throw new InvalidAuthorizationTokenException("Error while getting token subject!");
+            if (tokenSubject == null) {
+                response.sendError(401, "Error while getting token subject!");
+                return;
+            }
+
+            Optional<User> user = userDataProviderPort.findById(Long.valueOf(tokenSubject));
+
+            if (user.isEmpty()) {
+                response.sendError(401, "User not found!");
+                return;
+            }
+
+            List<UserRole> userRoles = userRoleDataProviderPort.findByUser(user.get().getId());
+
+            if (userRoles.isEmpty()) {
+                response.sendError(401, "User roles not found!");
+                return;
+            }
+
+            user.get().setUserRoles(userRoles);
+
+            UserDetails userDetails = new UserDetailsAdapter(user.get());
+
+            SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken(userDetails, token, userDetails.getAuthorities())
+            );
+
+            filterChain.doFilter(request, response);
+        } catch (InvalidAuthorizationTokenException e) {
+            response.sendError(401, "Invalid token or token expired!");
+        } catch (Exception e) {
+            response.sendError(500, e.getMessage());
         }
-
-        Optional<User> user = userDataProviderPort.findById(Long.valueOf(tokenSubject));
-
-        if (user.isEmpty()) {
-            throw new InvalidAuthorizationTokenException("User not found!");
-        }
-
-        List<UserRole> userRoles = userRoleDataProviderPort.findByUser(user.get().getId());
-
-        if (userRoles.isEmpty()) {
-            throw new InvalidAuthorizationTokenException("User roles not found!");
-        }
-
-        user.get().setUserRoles(userRoles);
-
-        UserDetails userDetails = new UserDetailsAdapter(user.get());
-
-        SecurityContextHolder.getContext().setAuthentication(
-            new UsernamePasswordAuthenticationToken(userDetails, token, userDetails.getAuthorities())
-        );
-
-        filterChain.doFilter(request, response);
     }
 
     private String getToken(HttpServletRequest request) {
