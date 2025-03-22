@@ -5,10 +5,12 @@ import org.com.mplayer.player.domain.core.entity.Lyric;
 import org.com.mplayer.player.domain.core.entity.Music;
 import org.com.mplayer.player.infra.interfaces.Mapper;
 import org.com.mplayer.player.infra.persistence.entity.CollectionEntity;
-import org.com.mplayer.player.infra.persistence.entity.LyricEntity;
 import org.com.mplayer.player.infra.persistence.entity.MusicEntity;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class MusicMapper implements Mapper<Music, MusicEntity> {
@@ -29,6 +31,18 @@ public class MusicMapper implements Mapper<Music, MusicEntity> {
             Collection collection = new Collection();
             map(persistenceEntity.getCollection(), collection);
             music.setCollection(collection);
+
+            if (persistenceEntity.getCollection().getMusics() != null) {
+                List<Music> collectionMusics = new ArrayList<>();
+
+                for (MusicEntity musicFromCollection : persistenceEntity.getCollection().getMusics()) {
+                    Music musicConverted = new Music();
+                    map(musicFromCollection, musicConverted);
+                    collectionMusics.add(musicConverted);
+                }
+
+                music.getCollection().setMusics(collectionMusics);
+            }
         }
 
         return music;
@@ -40,12 +54,6 @@ public class MusicMapper implements Mapper<Music, MusicEntity> {
 
         MusicEntity music = new MusicEntity();
         map(domainEntity, music);
-
-        if (domainEntity.getLyric() != null) {
-            LyricEntity lyric = new LyricEntity();
-            map(domainEntity.getLyric(), lyric);
-            music.setLyric(lyric);
-        }
 
         if (domainEntity.getCollection() != null) {
             CollectionEntity collection = new CollectionEntity();

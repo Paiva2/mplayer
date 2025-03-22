@@ -1,6 +1,6 @@
 /* */
 create table player.tb_collection (
-    col_id serial primary key,
+    col_id int primary key,
     col_title varchar(100) not null,
     col_artist varchar(100) not null,
     col_image_url varchar(255) default null,
@@ -33,7 +33,7 @@ EXECUTE PROCEDURE player.update_updated_at_tb_collections();
 /* */
 
 create table player.tb_music (
-    mus_id serial primary key,
+    mus_id int primary key,
     mus_title varchar(100) not null default 'unknown',
     mus_artist varchar(100) not null default 'unknown',
     mus_genre varchar(100) not null default 'unknown',
@@ -47,7 +47,7 @@ create table player.tb_music (
     mus_repository_url varchar(255) default null,
     mus_external_user_id varchar(255) not null,
     mus_external_id varchar(255) not null unique,
-    mus_collection_id serial references player.tb_collection (col_id)
+    mus_collection_id int references player.tb_collection (col_id)
 );
 
 create sequence player.tb_music_id_seq
@@ -61,11 +61,11 @@ create index search_ext_user_id_music on player.tb_music (mus_external_user_id);
 
 /* */
 create table player.tb_lyric (
-    lyr_id serial primary key,
+    lyr_id int primary key,
     lyr_lyric varchar not null,
     lyr_created_at timestamp not null default now(),
     lyr_updated_at timestamp not null default now(),
-    lyr_music_id serial references player.tb_music (mus_id) not null
+    lyr_music_id int references player.tb_music (mus_id) not null
 );
 
 create sequence player.tb_lyric_id_seq
@@ -91,7 +91,7 @@ EXECUTE PROCEDURE player.update_updated_at_tb_lyric();
 
 /* */
 create table player.tb_queue (
-    que_id serial primary key,
+    que_id int primary key,
     que_external_user_id varchar(255) not null,
     que_created_at timestamp not null default now(),
     que_updated_at timestamp not null default now()
@@ -124,8 +124,8 @@ EXECUTE PROCEDURE player.update_updated_at_tb_queue();
 create table player.tb_music_queue (
     muq_position int not null,
     muq_created_at timestamp not null default now(),
-    muq_queue_id bigserial not null references player.tb_queue (que_id),
-    muq_music_id bigserial not null references player.tb_music (mus_id),
+    muq_queue_id int not null references player.tb_queue (que_id),
+    muq_music_id int not null references player.tb_music (mus_id),
 
     unique (muq_position, muq_queue_id, muq_music_id),
     constraint music_queue_position_queue_music_pk primary key (muq_position, muq_queue_id, muq_music_id)
@@ -134,7 +134,7 @@ create table player.tb_music_queue (
 
 /* */
 create table player.tb_playlist (
-    ply_id bigserial primary key,
+    ply_id int primary key,
     ply_name varchar(200) not null,
     ply_cover_url varchar(255) default null,
     ply_created_at timestamp not null default now(),
@@ -170,8 +170,8 @@ create table player.tb_playlist_music (
     plm_position integer not null,
     plm_created_at timestamp not null default now(),
     plm_updated_at timestamp not null default now(),
-    plm_playlist_id serial references player.tb_playlist (ply_id),
-    plm_music_id serial references player.tb_music (mus_id),
+    plm_playlist_id int references player.tb_playlist (ply_id),
+    plm_music_id int references player.tb_music (mus_id),
 
     unique(plm_position, plm_playlist_id, plm_music_id),
     constraint playlist_music_position_playlist_music_pk primary key (plm_position, plm_playlist_id, plm_music_id)

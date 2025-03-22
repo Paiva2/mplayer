@@ -17,6 +17,7 @@ public class MusicDataProviderAdapter implements MusicDataProviderPort {
     private final MusicRepositoryOrm repository;
 
     private final MusicMapper mapper;
+    private final MusicMapper musicMapper;
 
     @Override
     public Optional<Music> findMusicByUserAndArtistAndTrack(String externalUserId, String artist, String track, String contentType) {
@@ -29,5 +30,24 @@ public class MusicDataProviderAdapter implements MusicDataProviderPort {
     public Music persist(Music music) {
         MusicEntity newMusic = repository.save(mapper.toPersistence(music));
         return mapper.toDomain(newMusic);
+    }
+
+    @Override
+    public Optional<Music> findById(Long id) {
+        Optional<MusicEntity> music = repository.findById(id);
+        if (music.isEmpty()) return Optional.empty();
+        return Optional.of(mapper.toDomain(music.get()));
+    }
+
+    @Override
+    public Optional<Music> findByIdWithDeps(Long id) {
+        Optional<MusicEntity> music = repository.findByIdWithDeps(id);
+        if (music.isEmpty()) return Optional.empty();
+        return Optional.of(mapper.toDomain(music.get()));
+    }
+
+    @Override
+    public void remove(Music music) {
+        repository.delete(musicMapper.toPersistence(music));
     }
 }

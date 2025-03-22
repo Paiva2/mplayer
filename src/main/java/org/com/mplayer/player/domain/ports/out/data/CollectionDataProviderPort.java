@@ -8,4 +8,8 @@ public interface CollectionDataProviderPort {
     Optional<Collection> findCollectionByUserAndAlbumName(String externalUserId, String albumName, String artist);
 
     Collection persistCollection(Collection collection);
+
+    Optional<Collection> findById(Long id);
+
+    void remove(Collection collection);
 }

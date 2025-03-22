@@ -8,4 +8,6 @@ public interface LyricDataProviderPort {
     Optional<Lyric> findLyricByArtistAndMusicTitle(String artist, String trackTitle);
 
     Lyric persist(Lyric lyric);
+
+    void removeByMusicId(Long musicId);
 }

@@ -8,4 +8,10 @@ public interface MusicDataProviderPort {
     Optional<Music> findMusicByUserAndArtistAndTrack(String externalUserId, String artist, String track, String contentType);
 
     Music persist(Music music);
+
+    Optional<Music> findById(Long id);
+
+    Optional<Music> findByIdWithDeps(Long id);
+
+    void remove(Music music);
 }

@@ -28,7 +28,19 @@ public class CollectionDataProviderAdapter implements CollectionDataProviderPort
     @Override
     public Collection persistCollection(Collection collection) {
         CollectionEntity newCollection = repository.save(mapper.toPersistence(collection));
-        
+
         return mapper.toDomain(newCollection);
+    }
+
+    @Override
+    public Optional<Collection> findById(Long id) {
+        Optional<CollectionEntity> collection = repository.findById(id);
+        if (collection.isEmpty()) return Optional.empty();
+        return Optional.of(mapper.toDomain(collection.get()));
+    }
+
+    @Override
+    public void remove(Collection collection) {
+        repository.delete(mapper.toPersistence(collection));
     }
 }

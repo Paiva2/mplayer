@@ -31,4 +31,9 @@ public class LyricDataProviderAdapter implements LyricDataProviderPort {
 
         return mapper.toDomain(newLyric);
     }
+
+    @Override
+    public void removeByMusicId(Long musicId) {
+        repository.deleteByMusicId(musicId);
+    }
 }
