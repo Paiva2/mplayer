@@ -26,17 +26,24 @@ public class FileUtilsAdapter implements FileUtilsPort {
             AudioFile audioFile = AudioFileIO.read(file);
             Tag tag = audioFile.getTag();
 
-            return new HashMap<>() {{
-                put("title", tag.getFirst(FieldKey.TITLE));
-                put("artist", tag.getFirst(FieldKey.ARTIST));
-                put("album", tag.getFirst(FieldKey.ALBUM));
-                put("genre", tag.getFirst(FieldKey.GENRE));
-                put("year", tag.getFirst(FieldKey.YEAR));
-                put("composer", tag.getFirst(FieldKey.COMPOSER));
-                put("cover", audioFile.getTag().getArtworkList().isEmpty() ? null : audioFile.getTag().getArtworkList().get(0).getBinaryData());
-                put("cover_content_type", audioFile.getTag().getArtworkList().isEmpty() ? null : audioFile.getTag().getArtworkList().get(0).getMimeType().split("/")[1]);
-                put("length", audioFile.getAudioHeader().getTrackLength());
-            }};
+            HashMap<String, Object> metadataMap = new HashMap<>();
+
+            if (audioFile.getAudioHeader() != null) {
+                metadataMap.put("length", audioFile.getAudioHeader().getTrackLength());
+            }
+
+            if (tag != null) {
+                metadataMap.put("title", tag.getFirst(FieldKey.TITLE));
+                metadataMap.put("artist", tag.getFirst(FieldKey.ARTIST));
+                metadataMap.put("album", tag.getFirst(FieldKey.ALBUM));
+                metadataMap.put("genre", tag.getFirst(FieldKey.GENRE));
+                metadataMap.put("year", tag.getFirst(FieldKey.YEAR));
+                metadataMap.put("composer", tag.getFirst(FieldKey.COMPOSER));
+                metadataMap.put("cover", audioFile.getTag().getArtworkList().isEmpty() ? null : audioFile.getTag().getArtworkList().get(0).getBinaryData());
+                metadataMap.put("cover_content_type", audioFile.getTag().getArtworkList().isEmpty() ? null : audioFile.getTag().getArtworkList().get(0).getMimeType().split("/")[1]);
+            }
+
+            return metadataMap;
         } catch (Exception e) {
             throw new RuntimeException(e);
         } finally {
