@@ -63,7 +63,7 @@ public class InsertMusicUsecase implements InsertMusicUsecasePort {
         String fileExternalId = generateExternalId(user.getId().toString(), originalFileNameNoExtension);
 
         String fileExternalIdMusic = fileExternalId.concat("_track").concat(".").concat(contentType);
-        String fileUploadedUrl = "";//uploadMusic(musicFile, fileExternalIdMusic, contentType);
+        String fileUploadedUrl = uploadMusic(musicFile, fileExternalIdMusic, contentType);
 
         Music music = fillMusic(originalFileNameNoExtension, user.getId().toString(), metadata, contentType, fileUploadedUrl, fileExternalId);
         music = persistMusic(music);

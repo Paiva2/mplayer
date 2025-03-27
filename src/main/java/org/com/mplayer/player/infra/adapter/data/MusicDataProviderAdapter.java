@@ -3,10 +3,15 @@ package org.com.mplayer.player.infra.adapter.data;
 import lombok.AllArgsConstructor;
 import org.com.mplayer.player.domain.core.entity.Music;
 import org.com.mplayer.player.domain.core.enums.EFileType;
+import org.com.mplayer.player.domain.core.enums.EOrderBy;
 import org.com.mplayer.player.domain.ports.out.data.MusicDataProviderPort;
 import org.com.mplayer.player.infra.mapper.MusicMapper;
 import org.com.mplayer.player.infra.persistence.entity.MusicEntity;
 import org.com.mplayer.player.infra.persistence.repository.MusicRepositoryOrm;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -49,5 +54,24 @@ public class MusicDataProviderAdapter implements MusicDataProviderPort {
     @Override
     public void remove(Music music) {
         repository.delete(musicMapper.toPersistence(music));
+    }
+
+    @Override
+    public Page<Music> findAllByExternalUser(int page, int size, String externalUserId, String title, EFileType fileType, String artist, String orderBy) {
+        String order = "mus_created_at";
+        String type = fileType != null ? fileType.name() : null;
+
+        if (orderBy != null) {
+            if (orderBy.toUpperCase().equals(EOrderBy.ARTIST.name())) {
+                order = "mus_artist";
+            } else if (orderBy.toUpperCase().equals(EOrderBy.TITLE.name())) {
+                order = "mus_title";
+            }
+        }
+
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.Direction.ASC, order);
+        Page<MusicEntity> musicEntities = repository.findAllByExternalUserFiltering(externalUserId, title, type, artist, pageable);
+
+        return musicEntities.map(musicMapper::toDomain);
     }
 }
