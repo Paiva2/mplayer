@@ -63,9 +63,9 @@ public class InsertMusicUsecase implements InsertMusicUsecasePort {
         String fileExternalId = generateExternalId(user.getId().toString(), originalFileNameNoExtension);
 
         String fileExternalIdMusic = fileExternalId.concat("_track").concat(".").concat(contentType);
-        String fileUploadedUrl = uploadMusic(musicFile, fileExternalIdMusic, contentType);
+        String fileUploadedUrl = "";//uploadMusic(musicFile, fileExternalIdMusic, contentType);
 
-        Music music = fillMusic(user.getId().toString(), metadata, contentType, fileUploadedUrl, fileExternalId);
+        Music music = fillMusic(originalFileNameNoExtension, user.getId().toString(), metadata, contentType, fileUploadedUrl, fileExternalId);
         music = persistMusic(music);
 
         Lyric musicLyric = fillMusicLyric(music);
@@ -108,12 +108,12 @@ public class InsertMusicUsecase implements InsertMusicUsecasePort {
         return musicDataProviderPort.findMusicByUserAndArtistAndTrack(externalUserId, artist, trackTitle, contentType);
     }
 
-    private Music fillMusic(String userId, Map<String, Object> metadata, String contentType, String fileUploadedUrl, String fileExternalId) {
+    private Music fillMusic(String originalFileName, String userId, Map<String, Object> metadata, String contentType, String fileUploadedUrl, String fileExternalId) {
         String albumName = "unknown";
         String trackTitle = "unknown";
         String artist = "unknown";
         String composer = "unknown";
-        byte[] cover = (byte[]) metadata.get("cover");
+        byte[] cover = metadata.get("cover") != null ? (byte[]) metadata.get("cover") : null;
         String genreFormatted = "unknown";
         String releaseYear = "unknown";
         String coverContentType = "unknown";
@@ -136,6 +136,8 @@ public class InsertMusicUsecase implements InsertMusicUsecasePort {
 
         if (metadata.get("title") != null && !((String) metadata.get("title")).isEmpty()) {
             trackTitle = (String) metadata.get("title");
+        } else {
+            trackTitle = originalFileName;
         }
 
         if (metadata.get("album") != null && !((String) metadata.get("album")).isEmpty()) {
@@ -153,7 +155,7 @@ public class InsertMusicUsecase implements InsertMusicUsecasePort {
             .composer(composer)
             .releaseYear(releaseYear)
             .coverUrl(cover == null ? findCoverImageUrl(artist, trackTitle) : uploadCoverImage(fileExternalId, cover, coverContentType))
-            .durationSeconds((long) (int) metadata.get("length"))
+            .durationSeconds(metadata.get("length") != null ? (long) (int) metadata.get("length") : 0)
             .fileType(EFileType.valueOf(contentType.toUpperCase()))
             .externalUserId(userId)
             .collection(handleCollection(userId, albumName, artist))
@@ -202,6 +204,8 @@ public class InsertMusicUsecase implements InsertMusicUsecasePort {
     }
 
     private String findCoverImageUrl(String artist, String trackTitle) {
+        if (artist.equals("unknown") || trackTitle == null || trackTitle.equals("unknown")) return null;
+
         return coverExternalIntegrationPort.findTrackCoverImageUrlByArtistAndTrack(artist, trackTitle);
     }
 
