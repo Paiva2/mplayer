@@ -1,20 +1,21 @@
 package org.com.mplayer.player.infra.adapter.external;
 
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.ObjectMetadata;
 import lombok.AllArgsConstructor;
 import org.com.mplayer.player.domain.ports.out.external.FileExternalIntegrationPort;
 import org.com.mplayer.player.domain.ports.out.utils.FileUtilsPort;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 
 @Component
 @AllArgsConstructor
 public class FileExternalIntegrationAdapter implements FileExternalIntegrationPort {
-    private final AmazonS3 s3Client;
+    private final S3Client s3Client;
 
     private final FileUtilsPort fileUtilsPort;
 
@@ -23,14 +24,14 @@ public class FileExternalIntegrationAdapter implements FileExternalIntegrationPo
     @Override
     public String insertFile(byte[] fileBytes, String fileName, String destination, String contentType) {
         try {
-            ByteArrayInputStream bais = new ByteArrayInputStream(fileBytes);
-            bais.close();
+            PutObjectRequest request = PutObjectRequest.builder()
+                .bucket(destination)
+                .key(fileName)
+                .contentType(contentType)
+                .contentLength((long) fileBytes.length)
+                .build();
 
-            ObjectMetadata objectMetadata = new ObjectMetadata();
-            objectMetadata.setContentLength(fileBytes.length);
-            objectMetadata.setContentType(contentType);
-
-            s3Client.putObject(destination, fileName, bais, objectMetadata);
+            s3Client.putObject(request, RequestBody.fromBytes(fileBytes));
 
             return mountUrl(destination, fileName);
         } catch (Exception e) {
@@ -45,7 +46,14 @@ public class FileExternalIntegrationAdapter implements FileExternalIntegrationPo
         try {
             file = fileUtilsPort.convertMultipartFileToFile(multipartFile);
 
-            s3Client.putObject(destination, fileName, file);
+            PutObjectRequest request = PutObjectRequest.builder()
+                .bucket(destination)
+                .key(fileName)
+                .contentType(contentType)
+                .contentLength(file.length())
+                .build();
+
+            s3Client.putObject(request, RequestBody.fromFile(file));
 
             return mountUrl(destination, fileName);
         } catch (Exception e) {
@@ -60,7 +68,12 @@ public class FileExternalIntegrationAdapter implements FileExternalIntegrationPo
     @Override
     public void removeFile(String source, String fileId) {
         try {
-            s3Client.deleteObject(source, fileId);
+            DeleteObjectRequest request = DeleteObjectRequest.builder()
+                .bucket(source)
+                .key(fileId)
+                .build();
+
+            s3Client.deleteObject(request);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
