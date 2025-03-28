@@ -6,11 +6,13 @@ import org.com.mplayer.player.domain.ports.out.utils.FileUtilsPort;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.core.sync.ResponseTransformer;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
-import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.*;
 
 import java.io.File;
+import java.math.BigDecimal;
+import java.util.HashMap;
 
 @Component
 @AllArgsConstructor
@@ -76,6 +78,66 @@ public class FileExternalIntegrationAdapter implements FileExternalIntegrationPo
             s3Client.deleteObject(request);
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public HashMap<String, Object> streamFile(String source, String fileId, String byteRange) {
+        HeadObjectRequest headObjectRequest = HeadObjectRequest.builder()
+            .bucket(source)
+            .key(fileId)
+            .build();
+
+        HeadObjectResponse objectMetadata = s3Client.headObject(headObjectRequest);
+        long fileSize = objectMetadata.contentLength();
+
+        long[] range = parseRange(byteRange, fileSize);
+        long start = range[0];
+        long end = range[1];
+        long rangeLength = end - start + 1;
+
+        GetObjectRequest getObjectRequest = GetObjectRequest.builder()
+            .bucket(source)
+            .key(fileId)
+            .range("bytes=" + start + "-" + end)
+            .build();
+
+        byte[] content = s3Client.getObject(getObjectRequest, ResponseTransformer.toBytes()).asByteArray();
+
+        return new HashMap<>() {{
+            put("content", content);
+            put("rangeLength", rangeLength);
+            put("start", start);
+            put("end", end);
+            put("fileSize", fileSize);
+        }};
+    }
+
+    private long[] parseRange(String rangeHeader, long fileSize) {
+        BigDecimal defaultEndValuePercentage = new BigDecimal("0.05"); // 5%
+        BigDecimal minEndValue = defaultEndValuePercentage.multiply(new BigDecimal(fileSize - 1));
+        long defaultMinEndValue = Math.min(minEndValue.longValue(), fileSize - 1);
+
+        if (rangeHeader == null || !rangeHeader.contains("bytes=")) {
+            return new long[]{0, defaultMinEndValue};
+        }
+
+        try {
+            String byteRange = rangeHeader.replace("bytes=", "");
+            String[] ranges = byteRange.split("-");
+
+            if (ranges.length < 1) {
+                return new long[]{0, defaultMinEndValue};
+            }
+
+            long start = Math.max(0, Long.parseLong(ranges[0]));
+            long end = ranges.length > 1 && !ranges[1].isEmpty() ?
+                Math.min(Long.parseLong(ranges[1]), fileSize - 1) :
+                defaultMinEndValue;
+
+            return new long[]{start, end};
+        } catch (Exception e) {
+            throw new RuntimeException("Error while parsing range: " + rangeHeader, e);
         }
     }
 
