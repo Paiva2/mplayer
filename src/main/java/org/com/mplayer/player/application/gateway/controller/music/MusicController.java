@@ -1,10 +1,8 @@
 package org.com.mplayer.player.application.gateway.controller.music;
 
 import lombok.AllArgsConstructor;
-import org.com.mplayer.player.domain.ports.in.usecase.InsertMusicUsecasePort;
-import org.com.mplayer.player.domain.ports.in.usecase.ListMusicFilesUsecasePort;
-import org.com.mplayer.player.domain.ports.in.usecase.RemoveMusicUsecasePort;
-import org.com.mplayer.player.domain.ports.in.usecase.StreamMusicUsecasePort;
+import org.com.mplayer.player.domain.ports.in.usecase.*;
+import org.com.mplayer.player.domain.ports.out.external.dto.GetMusicDTO;
 import org.com.mplayer.player.domain.ports.out.external.dto.ListMusicFilesDTO;
 import org.com.mplayer.player.domain.ports.out.external.dto.StreamMusicDTO;
 import org.springframework.http.HttpHeaders;
@@ -26,6 +24,7 @@ public class MusicController {
     private final RemoveMusicUsecasePort removeMusicUsecasePort;
     private final ListMusicFilesUsecasePort listMusicFilesUsecasePort;
     private final StreamMusicUsecasePort streamMusicUsecasePort;
+    private final GetMusicUsecasePort getMusicUsecasePort;
 
     @PostMapping("/music/new")
     public ResponseEntity<Void> insertMusicFile(@RequestParam("file") MultipartFile file) {
@@ -53,7 +52,7 @@ public class MusicController {
     }
 
     @GetMapping("/stream/music/{musicId}")
-    public ResponseEntity<byte[]> streamMusic(
+    public ResponseEntity<StreamMusicDTO> streamMusic(
         @RequestHeader(value = "range", required = false) String rangeHeader,
         @PathVariable("musicId") Long musicId
     ) {
@@ -68,6 +67,15 @@ public class MusicController {
             MessageFormat.format("bytes {0}-{1}/{2}", output.getStart(), output.getEnd(), output.getFileSize())
         );
 
-        return new ResponseEntity<>(output.getContent(), headers, HttpStatus.PARTIAL_CONTENT);
+        return new ResponseEntity<>(output, headers, HttpStatus.PARTIAL_CONTENT);
     }
+
+    @GetMapping("/music/{musicId}")
+    public ResponseEntity<GetMusicDTO> streamMusic(
+        @PathVariable("musicId") Long musicId
+    ) {
+        GetMusicDTO output = getMusicUsecasePort.execute(musicId);
+        return new ResponseEntity<>(output, HttpStatus.OK);
+    }
+
 }
