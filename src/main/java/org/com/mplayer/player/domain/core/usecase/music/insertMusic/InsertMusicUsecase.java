@@ -5,13 +5,13 @@ import lombok.AllArgsConstructor;
 import org.com.mplayer.player.domain.core.entity.Collection;
 import org.com.mplayer.player.domain.core.entity.Lyric;
 import org.com.mplayer.player.domain.core.entity.Music;
+import org.com.mplayer.player.domain.core.entity.Queue;
 import org.com.mplayer.player.domain.core.enums.EFileType;
 import org.com.mplayer.player.domain.core.usecase.common.exception.InvalidContentTypeException;
+import org.com.mplayer.player.domain.core.usecase.common.exception.QueueNotFoundException;
 import org.com.mplayer.player.domain.core.usecase.music.insertMusic.exception.MusicAlreadyAddedByUserException;
 import org.com.mplayer.player.domain.ports.in.usecase.InsertMusicUsecasePort;
-import org.com.mplayer.player.domain.ports.out.data.CollectionDataProviderPort;
-import org.com.mplayer.player.domain.ports.out.data.LyricDataProviderPort;
-import org.com.mplayer.player.domain.ports.out.data.MusicDataProviderPort;
+import org.com.mplayer.player.domain.ports.out.data.*;
 import org.com.mplayer.player.domain.ports.out.external.CoverExternalIntegrationPort;
 import org.com.mplayer.player.domain.ports.out.external.FileExternalIntegrationPort;
 import org.com.mplayer.player.domain.ports.out.external.LyricsExternalIntegrationPort;
@@ -35,6 +35,8 @@ public class InsertMusicUsecase implements InsertMusicUsecasePort {
     private final MusicDataProviderPort musicDataProviderPort;
     private final CollectionDataProviderPort collectionDataProviderPort;
     private final LyricDataProviderPort lyricDataProviderPort;
+    private final QueueDataProviderPort queueDataProviderPort;
+    private final MusicQueueDataProviderPort musicQueueDataProviderPort;
 
     private final LyricsExternalIntegrationPort lyricsExternalIntegrationPort;
     private final CoverExternalIntegrationPort coverExternalIntegrationPort;
@@ -73,6 +75,9 @@ public class InsertMusicUsecase implements InsertMusicUsecasePort {
         if (musicLyric != null) {
             persistLyric(musicLyric);
         }
+
+        Queue queue = findUserQueue(user.getId().toString());
+        insertMusicLastPositionQueue(queue, music);
     }
 
     private FindUserExternalProfileDTO findUser() {
@@ -197,6 +202,14 @@ public class InsertMusicUsecase implements InsertMusicUsecasePort {
 
     private void persistLyric(Lyric lyric) {
         lyricDataProviderPort.persist(lyric);
+    }
+
+    private Queue findUserQueue(String externalUserId) {
+        return queueDataProviderPort.findByUser(externalUserId).orElseThrow(QueueNotFoundException::new);
+    }
+
+    private void insertMusicLastPositionQueue(Queue queue, Music music) {
+        musicQueueDataProviderPort.insertMusicQueueLastPosition(queue.getId(), music.getId());
     }
 
     private String uploadMusic(MultipartFile multipartFile, String fileName, String contentType) {

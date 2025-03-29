@@ -4,12 +4,13 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.com.mplayer.player.domain.core.entity.Collection;
 import org.com.mplayer.player.domain.core.entity.Music;
+import org.com.mplayer.player.domain.core.entity.MusicQueue;
+import org.com.mplayer.player.domain.core.entity.Queue;
 import org.com.mplayer.player.domain.core.usecase.common.exception.MusicNotBelongUserException;
 import org.com.mplayer.player.domain.core.usecase.common.exception.MusicNotFoundException;
+import org.com.mplayer.player.domain.core.usecase.common.exception.QueueNotFoundException;
 import org.com.mplayer.player.domain.ports.in.usecase.RemoveMusicUsecasePort;
-import org.com.mplayer.player.domain.ports.out.data.CollectionDataProviderPort;
-import org.com.mplayer.player.domain.ports.out.data.LyricDataProviderPort;
-import org.com.mplayer.player.domain.ports.out.data.MusicDataProviderPort;
+import org.com.mplayer.player.domain.ports.out.data.*;
 import org.com.mplayer.player.domain.ports.out.external.FileExternalIntegrationPort;
 import org.com.mplayer.player.domain.ports.out.external.UserExternalIntegrationPort;
 import org.com.mplayer.player.domain.ports.out.external.dto.FindUserExternalProfileDTO;
@@ -29,6 +30,8 @@ public class RemoveMusicUsecase implements RemoveMusicUsecasePort {
     private final MusicDataProviderPort musicDataProviderPort;
     private final LyricDataProviderPort lyricDataProviderPort;
     private final CollectionDataProviderPort collectionDataProviderPort;
+    private final MusicQueueDataProviderPort musicQueueDataProviderPort;
+    private final QueueDataProviderPort queueDataProviderPort;
 
     @Override
     @Transactional
@@ -41,6 +44,9 @@ public class RemoveMusicUsecase implements RemoveMusicUsecasePort {
             throw new MusicNotBelongUserException();
         }
 
+        Queue queue = findQueue(user.getId().toString());
+
+        removeMusicFromQueue(queue, music);
         removeMusicLyric(music);
         removeMusic(music);
         handleMusicCollection(music);
@@ -55,6 +61,21 @@ public class RemoveMusicUsecase implements RemoveMusicUsecasePort {
 
     private Music findMusic(long musicId) {
         return musicDataProviderPort.findByIdWithDeps(musicId).orElseThrow(MusicNotFoundException::new);
+    }
+
+    private Queue findQueue(String userId) {
+        return queueDataProviderPort.findByUser(userId).orElseThrow(QueueNotFoundException::new);
+    }
+
+    private void removeMusicFromQueue(Queue queue, Music music) {
+        List<MusicQueue> musicsQueue = musicQueueDataProviderPort.getAllByQueueAndMusic(queue.getId(), music.getId());
+
+        for (MusicQueue musicQueue : musicsQueue) {
+            Integer positionRemoved = musicQueue.getPosition();
+            
+            musicQueueDataProviderPort.remove(musicQueue);
+            musicQueueDataProviderPort.updateDecreasePositionsHigher(queue.getId(), positionRemoved);
+        }
     }
 
     private void removeMusicLyric(Music music) {
