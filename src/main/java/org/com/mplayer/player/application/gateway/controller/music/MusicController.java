@@ -52,7 +52,7 @@ public class MusicController {
     }
 
     @GetMapping("/stream/music/{musicId}")
-    public ResponseEntity<StreamMusicDTO> streamMusic(
+    public ResponseEntity<byte[]> streamMusic(
         @RequestHeader(value = "range", required = false) String rangeHeader,
         @PathVariable("musicId") Long musicId
     ) {
@@ -64,10 +64,10 @@ public class MusicController {
         headers.setContentLength(output.getRangeLength());
         headers.set(
             "Content-Range",
-            MessageFormat.format("bytes {0}-{1}/{2}", output.getStart(), output.getEnd(), output.getFileSize())
+            MessageFormat.format("bytes={0}-{1}/{2}", output.getStart(), output.getEnd(), output.getFileSize())
         );
 
-        return new ResponseEntity<>(output, headers, HttpStatus.PARTIAL_CONTENT);
+        return new ResponseEntity<>(output.getContent(), headers, HttpStatus.PARTIAL_CONTENT);
     }
 
     @GetMapping("/music/{musicId}")
