@@ -1,4 +1,4 @@
-package org.com.mplayer.player.domain.core.usecase.queue.listQueueMusics;
+package org.com.mplayer.player.domain.core.usecase.musicQueue.listQueueMusics;
 
 import lombok.AllArgsConstructor;
 import org.com.mplayer.player.domain.core.entity.MusicQueue;

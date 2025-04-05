@@ -26,5 +26,6 @@ public class MusicQueue {
     public static class KeyId {
         private Long queueId;
         private Long musicId;
+        private Integer position;
     }
 }

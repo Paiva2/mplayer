@@ -9,6 +9,7 @@ import org.com.mplayer.player.infra.persistence.repository.MusicQueueRepositoryO
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @AllArgsConstructor
@@ -24,9 +25,22 @@ public class MusicQueueDataProviderAdapter implements MusicQueueDataProviderPort
     }
 
     @Override
+    public Optional<MusicQueue> findByQueueAndMusicPosition(Long queueId, Long musicId, int position) {
+        Optional<MusicQueueEntity> musicQueueEntity = repository.findByQueueIdAndMusicIdAndPosition(queueId, musicId, position);
+        if (musicQueueEntity.isEmpty()) return Optional.empty();
+        return Optional.of(mapper.toDomain(musicQueueEntity.get()));
+    }
+
+    @Override
     public MusicQueue insertMusicQueueLastPosition(Long queueId, Long musicId) {
         MusicQueueEntity newMusicQueue = repository.insertLastPosition(queueId, musicId);
         return mapper.toDomain(newMusicQueue);
+    }
+
+    @Override
+    public List<MusicQueue> insertAll(List<MusicQueue> musicQueues) {
+        List<MusicQueueEntity> musicQueueEntities = repository.saveAll(musicQueues.stream().map(mapper::toPersistence).toList());
+        return musicQueueEntities.stream().map(mapper::toDomain).toList();
     }
 
     @Override

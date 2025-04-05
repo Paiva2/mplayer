@@ -21,6 +21,12 @@ public class MusicQueueMapper implements Mapper<MusicQueue, MusicQueueEntity> {
         MusicQueue musicQueue = new MusicQueue();
         map(persistenceEntity, musicQueue);
 
+        if (persistenceEntity.getId() != null) {
+            MusicQueue.KeyId id = new MusicQueue.KeyId();
+            map(persistenceEntity.getId(), id);
+            musicQueue.setId(id);
+        }
+
         if (persistenceEntity.getMusic() != null) {
             Music music = new Music();
             map(persistenceEntity.getMusic(), music);
@@ -48,6 +54,12 @@ public class MusicQueueMapper implements Mapper<MusicQueue, MusicQueueEntity> {
 
         MusicQueueEntity musicQueue = new MusicQueueEntity();
         map(domainEntity, musicQueue);
+
+        if (domainEntity.getId() != null) {
+            MusicQueueEntity.KeyId id = new MusicQueueEntity.KeyId();
+            map(domainEntity.getId(), id);
+            musicQueue.setId(id);
+        }
 
         if (domainEntity.getMusic() != null) {
             MusicEntity music = new MusicEntity();

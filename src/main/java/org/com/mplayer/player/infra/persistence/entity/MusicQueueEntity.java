@@ -41,5 +41,7 @@ public class MusicQueueEntity {
     public static class KeyId {
         private Long musicId;
         private Long queueId;
+        @Column(name = "muq_position", insertable = false, updatable = false)
+        private Integer position;
     }
 }
