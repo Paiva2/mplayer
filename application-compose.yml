@@ -1,0 +1,45 @@
+version: '2'
+
+services:
+  mplayer-api:
+    container_name: "mplayer-api"
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    environment:
+      APPLICATION_HOST: ${APPLICATION_HOST}
+      APPLICATION_FLYWAY_ENABLED: ${APPLICATION_FLYWAY_ENABLED}
+      MPLAYER_DB_USERNAME: ${MPLAYER_DB_USERNAME}
+      MPLAYER_DB_PASSWORD: ${MPLAYER_DB_PASSWORD}
+      MPLAYER_DB_DATABASE: ${MPLAYER_DB_DATABASE}
+      MPLAYER_DB_HOST: mplayer-db
+      MPLAYER_DB_URI: jdbc:postgresql://mplayer-db:5432/mplayer-db
+      MPLAYER_DB_DRIVER: ${MPLAYER_DB_DRIVER}
+      MPLAYER_DB_DIALECT: ${MPLAYER_DB_DIALECT}
+      MAIL_USERNAME: ${MAIL_USERNAME}
+      MAIL_APP_PASS: ${MAIL_APP_PASS}
+      RABBITMQ_USER: ${RABBITMQ_USER}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
+      RABBITMQ_HOST: mplayer-broker
+      RABBITMQ_PORT: ${RABBITMQ_PORT}
+      PRIVATE_RSA: /private_key.pem
+      PUBLIC_RSA: /private_key.pem
+      ACCESS_KEY_AWS: ${ACCESS_KEY_AWS}
+      SECRET_KEY_AWS: ${SECRET_KEY_AWS}
+      LAST_FM_API_KEY: ${LAST_FM_API_KEY}
+      LAST_FM_SHARED_SECRET: ${LAST_FM_SHARED_SECRET}
+    volumes:
+      - ./private_key.pem:/private_key.pem
+      - ./public_key.pem:/public_key.pem
+    networks:
+      - mplayer-net
+
+networks:
+  mplayer-net:
+volumes:
+  cache:
+    driver: local
