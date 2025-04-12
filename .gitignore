@@ -5,6 +5,9 @@ target/
 !**/src/test/**/target/
 .env
 *.pem
+todo.txt
+.DS_Store
+!**/.DS_Store
 
 ### STS ###
 .apt_generated

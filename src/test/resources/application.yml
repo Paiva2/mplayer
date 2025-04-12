@@ -6,18 +6,20 @@ spring:
     name: mplayer
   flyway:
     schemas: public
+    enabled: false
   datasource:
-    url: jdbc:postgresql://localhost:5432/''
-    username: ''
-    password: ''
-    driver-class-name: org.postgresql.Driver
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password: password
+    driver-class-name: org.h2.Driver
   jpa:
     hibernate:
       ddl-auto: none
     show-sql: false
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+        dialect: org.hibernate.dialect.H2Dialect
+    database-platform: org.hibernate.dialect.H2Dialect
   mail:
     username: ''
     password: ''
@@ -29,3 +31,17 @@ spring:
     username: guest
     password: guest
     port: 5672
+
+auth:
+  jwt:
+    private-rsa: 'test'
+    public-rsa: 'test'
+  aws:
+    access-key: 'test'
+    secret-key: 'test'
+  last-fm:
+    api-key: 'test'
+
+services:
+  endpoint:
+    user: http://localhost:${server.port}/api/v1/user

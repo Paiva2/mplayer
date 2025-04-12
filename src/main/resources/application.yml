@@ -4,23 +4,25 @@ server:
 spring:
   application:
     name: mplayer
+  flyway:
+    enabled: ${APPLICATION_FLYWAY_ENABLED}
   servlet:
     multipart:
       max-file-size: 100MB
       max-request-size: 100MB
       enabled: true
   datasource:
-    url: jdbc:postgresql://${MPLAYER_DB_HOST}:5432/${MPLAYER_DB_DATABASE}
+    url: ${MPLAYER_DB_URI}
     username: ${MPLAYER_DB_USERNAME}
     password: ${MPLAYER_DB_PASSWORD}
-    driver-class-name: org.postgresql.Driver
+    driver-class-name: ${MPLAYER_DB_DRIVER}
   jpa:
     hibernate:
       ddl-auto: none
     show-sql: false
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+        dialect: ${MPLAYER_DB_DIALECT}
   mail:
     username: ${MAIL_USERNAME}
     password: ${MAIL_APP_PASS}
@@ -31,7 +33,7 @@ spring:
     host: ${RABBITMQ_HOST}
     username: ${RABBITMQ_USER}
     password: ${RABBITMQ_PASSWORD}
-    port: 5672
+    port: ${RABBITMQ_PORT}
   modulith:
     events:
       externalization:

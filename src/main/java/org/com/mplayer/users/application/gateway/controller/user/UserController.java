@@ -29,6 +29,11 @@ public class UserController {
     private final AuthUserUsecasePort authUserUsecasePort;
     private final GetProfileUsecasePort getProfileUsecasePort;
 
+    @GetMapping("/health")
+    public ResponseEntity<String> health() {
+        return ResponseEntity.ok("OK");
+    }
+
     @Transactional
     @PostMapping("/register")
     public ResponseEntity<Void> register(@RequestBody @Valid RegisterUserDTO dto) {

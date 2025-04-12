@@ -44,6 +44,7 @@ public class MPlayerWebSecurityConfiguration {
                     .requestMatchers(RoutesConfig.Public.REGISTER).permitAll()
                     .requestMatchers(RoutesConfig.Public.FORGOT_PASSWORD).permitAll()
                     .requestMatchers(RoutesConfig.Public.LOGIN).permitAll()
+                    .requestMatchers(RoutesConfig.Public.HEALTH_CHECK).permitAll()
                     .anyRequest().authenticated()
             );
 

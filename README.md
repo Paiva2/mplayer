@@ -7,7 +7,7 @@
 - Login
 - Handle User Profile
 - Follow other accounts (users)
-- Play Music
+- Play Music (Streaming)
 - Playlist managements
 - Copy other user's playlists
 - Listen to other user's playlists
