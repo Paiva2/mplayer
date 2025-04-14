@@ -2,9 +2,9 @@ package org.com.mplayer.users;
 
 import org.springframework.modulith.events.Externalized;
 
-import static org.com.mplayer.QueueConstants.MAIL_EXCHANGE;
+import static org.com.mplayer.global.QueueConstants.MAIL_DESTINATION;
 
-@Externalized(target = MAIL_EXCHANGE)
+@Externalized(MAIL_DESTINATION)
 public record SendSimpleMailUserEvent(String to, String subject, String content) {
 
 }

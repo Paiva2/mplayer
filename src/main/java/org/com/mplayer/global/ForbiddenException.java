@@ -1,4 +1,4 @@
-package org.com.mplayer;
+package org.com.mplayer.global;
 
 public class ForbiddenException extends RuntimeException {
     public ForbiddenException(String message) {

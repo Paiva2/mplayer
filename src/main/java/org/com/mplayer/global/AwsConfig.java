@@ -1,4 +1,4 @@
-package org.com.mplayer;
+package org.com.mplayer.global;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

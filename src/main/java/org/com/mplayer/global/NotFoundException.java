@@ -1,4 +1,4 @@
-package org.com.mplayer;
+package org.com.mplayer.global;
 
 public class NotFoundException extends RuntimeException {
     public NotFoundException(String message) {

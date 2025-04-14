@@ -1,4 +1,4 @@
-package org.com.mplayer;
+package org.com.mplayer.global;
 
 public class RoutesConfig {
     public static class Public {

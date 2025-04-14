@@ -1,4 +1,4 @@
-package org.com.mplayer;
+package org.com.mplayer.global;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,7 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.client.RestTemplate;
 
 @Configuration
-public class HttpConfig {
+public class RestTemplateConfig {
 
     @Bean
     public RestTemplate rest() {

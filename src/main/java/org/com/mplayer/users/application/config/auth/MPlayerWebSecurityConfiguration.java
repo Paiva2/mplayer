@@ -1,7 +1,8 @@
-package org.com.mplayer;
+package org.com.mplayer.users.application.config.auth;
 
 import jakarta.servlet.DispatcherType;
 import lombok.AllArgsConstructor;
+import org.com.mplayer.global.RoutesConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -23,7 +24,7 @@ import java.util.List;
 @AllArgsConstructor
 @EnableMethodSecurity(securedEnabled = true)
 public class MPlayerWebSecurityConfiguration {
-    private final MPlayerWebSecurityRequestFilterConfiguration MPlayerWebSecurityRequestFilterConfiguration;
+    private final org.com.mplayer.users.application.config.auth.MPlayerWebSecurityRequestFilterConfiguration MPlayerWebSecurityRequestFilterConfiguration;
 
     @Bean
     public SecurityFilterChain configureUserSecurityConfig(HttpSecurity http) throws Exception {

@@ -1,6 +1,6 @@
 package org.com.mplayer.users.domain.core.usecase.common.exception;
 
-import org.com.mplayer.NotFoundException;
+import org.com.mplayer.global.NotFoundException;
 
 public class UserNotFoundException extends NotFoundException {
     private final static String DEFAULT = "User not found!";

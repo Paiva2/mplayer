@@ -1,10 +1,11 @@
-package org.com.mplayer;
+package org.com.mplayer.users.application.config.auth;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
+import org.com.mplayer.global.RoutesConfig;
 import org.com.mplayer.users.domain.core.entity.User;
 import org.com.mplayer.users.domain.core.entity.UserRole;
 import org.com.mplayer.users.domain.ports.out.data.UserDataProviderPort;

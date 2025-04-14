@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.com.mplayer.users.domain.core.enums.ERole;
+import org.com.mplayer.player.domain.core.enums.ERole;
 
 import java.util.Date;
 

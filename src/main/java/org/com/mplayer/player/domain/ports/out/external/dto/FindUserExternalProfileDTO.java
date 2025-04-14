@@ -8,8 +8,8 @@ import org.com.mplayer.player.domain.core.entity.external.UserRole;
 
 import java.util.List;
 
-@Builder
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class FindUserExternalProfileDTO {

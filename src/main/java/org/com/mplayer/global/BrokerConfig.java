@@ -1,6 +1,5 @@
-package org.com.mplayer;
+package org.com.mplayer.global;
 
-import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -9,8 +8,6 @@ import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import static org.com.mplayer.QueueConstants.*;
 
 
 @Configuration
@@ -26,41 +23,7 @@ public class BrokerConfig {
 
     @Value("${spring.rabbitmq.port}")
     private Integer port;
-
-    @Bean
-    public Queue mailQueue() {
-        return createQueue(MAIL_QUEUE);
-    }
-
-    @Bean
-    public Exchange mailExchange() {
-        return ExchangeBuilder.topicExchange(MAIL_EXCHANGE).durable(true).build();
-    }
-
-    @Bean
-    public Binding mailBinding() {
-        return BindingBuilder.bind(mailQueue()).to(mailExchange()).with(MAIL_RK).noargs();
-    }
-
-    @Bean
-    public Queue playerQueue() {
-        return createQueue(PLAYER_QUEUE);
-    }
-
-    @Bean
-    public Exchange playerExchange() {
-        return ExchangeBuilder.topicExchange(PLAYER_EXCHANGE).durable(true).build();
-    }
-
-    @Bean
-    public Binding playerBinding() {
-        return BindingBuilder.bind(playerQueue()).to(playerExchange()).with(PLAYER_RK).noargs();
-    }
-
-    public Queue createQueue(String queueName) {
-        return new Queue(queueName, true, false, false);
-    }
-
+    
     @Bean
     public ConnectionFactory connectionFactory() {
         CachingConnectionFactory connectionFactory = new CachingConnectionFactory();

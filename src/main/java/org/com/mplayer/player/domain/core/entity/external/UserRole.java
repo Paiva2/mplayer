@@ -4,8 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.com.mplayer.users.domain.core.entity.Role;
-import org.com.mplayer.users.domain.core.entity.User;
 
 import java.util.Date;
 

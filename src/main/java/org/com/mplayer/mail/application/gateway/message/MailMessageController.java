@@ -21,7 +21,7 @@ public class MailMessageController {
 
         sendSimpleMail(event.to(), event.subject(), event.content());
     }
-
+    
     private void sendSimpleMail(String to, String subject, String content) {
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
