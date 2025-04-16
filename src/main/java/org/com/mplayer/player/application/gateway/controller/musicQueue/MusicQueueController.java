@@ -6,7 +6,7 @@ import org.com.mplayer.player.domain.ports.in.usecase.ChangeMusicQueuePositionUs
 import org.com.mplayer.player.domain.ports.in.usecase.InsertMusicQueueUsecasePort;
 import org.com.mplayer.player.domain.ports.in.usecase.ListQueueMusicsUsecasePort;
 import org.com.mplayer.player.domain.ports.in.usecase.RemoveMusicQueueUsecasePort;
-import org.com.mplayer.player.domain.ports.out.external.dto.ListQueueMusicsDTO;
+import org.com.mplayer.player.domain.ports.out.external.dto.ListQueueMusicsOutputPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +23,8 @@ public class MusicQueueController {
     private final ChangeMusicQueuePositionUsecasePort changeMusicQueuePositionUsecasePort;
 
     @GetMapping("/music-queue/list")
-    public ResponseEntity<ListQueueMusicsDTO> listQueue() {
-        ListQueueMusicsDTO output = listQueueMusicsUsecasePort.execute();
+    public ResponseEntity<ListQueueMusicsOutputPort> listQueue() {
+        ListQueueMusicsOutputPort output = listQueueMusicsUsecasePort.execute();
         return new ResponseEntity<>(output, HttpStatus.OK);
     }
 

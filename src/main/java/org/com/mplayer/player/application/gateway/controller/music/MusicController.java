@@ -2,9 +2,9 @@ package org.com.mplayer.player.application.gateway.controller.music;
 
 import lombok.AllArgsConstructor;
 import org.com.mplayer.player.domain.ports.in.usecase.*;
-import org.com.mplayer.player.domain.ports.out.external.dto.GetMusicDTO;
-import org.com.mplayer.player.domain.ports.out.external.dto.ListMusicFilesDTO;
-import org.com.mplayer.player.domain.ports.out.external.dto.StreamMusicDTO;
+import org.com.mplayer.player.domain.ports.out.external.dto.GetMusicOutputPort;
+import org.com.mplayer.player.domain.ports.out.external.dto.ListMusicFilesOutputPort;
+import org.com.mplayer.player.domain.ports.out.external.dto.StreamMusicOutputPort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -39,7 +39,7 @@ public class MusicController {
     }
 
     @GetMapping("/music/list/me")
-    public ResponseEntity<ListMusicFilesDTO> listMusics(
+    public ResponseEntity<ListMusicFilesOutputPort> listMusics(
         @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
         @RequestParam(value = "size", required = false, defaultValue = "30") Integer size,
         @RequestParam(value = "title", required = false) String title,
@@ -47,7 +47,7 @@ public class MusicController {
         @RequestParam(value = "artist", required = false) String artist,
         @RequestParam(value = "order", required = false) String order
     ) {
-        ListMusicFilesDTO output = listMusicFilesUsecasePort.execute(page, size, title, type, artist, order);
+        ListMusicFilesOutputPort output = listMusicFilesUsecasePort.execute(page, size, title, type, artist, order);
         return new ResponseEntity<>(output, HttpStatus.OK);
     }
 
@@ -56,7 +56,7 @@ public class MusicController {
         @RequestHeader(value = "range", required = false) String rangeHeader,
         @PathVariable("musicId") Long musicId
     ) {
-        StreamMusicDTO output = streamMusicUsecasePort.execute(musicId, rangeHeader);
+        StreamMusicOutputPort output = streamMusicUsecasePort.execute(musicId, rangeHeader);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType(output.getMediaType()));
@@ -71,10 +71,10 @@ public class MusicController {
     }
 
     @GetMapping("/music/{musicId}")
-    public ResponseEntity<GetMusicDTO> streamMusic(
+    public ResponseEntity<GetMusicOutputPort> streamMusic(
         @PathVariable("musicId") Long musicId
     ) {
-        GetMusicDTO output = getMusicUsecasePort.execute(musicId);
+        GetMusicOutputPort output = getMusicUsecasePort.execute(musicId);
         return new ResponseEntity<>(output, HttpStatus.OK);
     }
 

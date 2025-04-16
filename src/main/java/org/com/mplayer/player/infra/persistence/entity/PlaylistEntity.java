@@ -28,6 +28,9 @@ public class PlaylistEntity {
     @Column(name = "ply_cover_url")
     private String coverUrl;
 
+    @Column(name = "ply_visible_public")
+    private Boolean visiblePublic;
+
     @CreationTimestamp
     @Column(name = "ply_created_at")
     private Date createdAt;
@@ -38,6 +41,9 @@ public class PlaylistEntity {
 
     @Column(name = "ply_external_user_id")
     private String externalUserId;
+    
+    @Column(name = "ply_external_cover_id")
+    private String externalCoverId;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "playlist")
     private List<PlaylistMusicEntity> playlistMusics;

@@ -13,7 +13,7 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetMusicDTO {
+public class GetMusicOutputPort {
     private Long id;
     private String title;
     private String artist;
@@ -27,7 +27,7 @@ public class GetMusicDTO {
     private CollectionDTO collection;
     private LyricsDTO lyrics;
 
-    public GetMusicDTO(Music music) {
+    public GetMusicOutputPort(Music music) {
         this.id = music.getId();
         this.title = music.getTitle();
         this.artist = music.getArtist();

@@ -5,7 +5,7 @@ spring:
   application:
     name: mplayer
   flyway:
-    enabled: ${APPLICATION_FLYWAY_ENABLED}
+    enabled: true
   servlet:
     multipart:
       max-file-size: 100MB

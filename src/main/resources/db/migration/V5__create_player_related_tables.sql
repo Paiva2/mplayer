@@ -1,5 +1,5 @@
 /* */
-create table player.tb_collection (
+create table if not exists player.tb_collection (
     col_id int primary key,
     col_title varchar(100) not null,
     col_artist varchar(100) not null,
@@ -9,14 +9,14 @@ create table player.tb_collection (
     col_external_user_id varchar(255) not null
 );
 
-create sequence player.tb_collection_id_seq
+create sequence if not exists player.tb_collection_id_seq
     minvalue 1
     increment 1
     cache 1
     start 1
     owned by player.tb_collection.col_id;
 
-create index search_ext_user_id_collection on player.tb_collection (col_external_user_id);
+create index if not exists search_ext_user_id_collection on player.tb_collection (col_external_user_id);
 
 CREATE FUNCTION player.update_updated_at_tb_collections()
     RETURNS TRIGGER AS $$
@@ -32,7 +32,7 @@ CREATE TRIGGER update_collections_task_updated_on
 EXECUTE PROCEDURE player.update_updated_at_tb_collections();
 /* */
 
-create table player.tb_music (
+create table if not exists player.tb_music (
     mus_id int primary key,
     mus_title varchar(100) not null default 'unknown',
     mus_artist varchar(100) not null default 'unknown',
@@ -50,17 +50,17 @@ create table player.tb_music (
     mus_collection_id int references player.tb_collection (col_id)
 );
 
-create sequence player.tb_music_id_seq
+create sequence if not exists player.tb_music_id_seq
     minvalue 1
     increment 1
     cache 1
     start 1
     owned by player.tb_music.mus_id;
 
-create index search_ext_user_id_music on player.tb_music (mus_external_user_id);
+create index if not exists search_ext_user_id_music on player.tb_music (mus_external_user_id);
 
 /* */
-create table player.tb_lyric (
+create table if not exists player.tb_lyric (
     lyr_id int primary key,
     lyr_lyric varchar not null,
     lyr_created_at timestamp not null default now(),
@@ -68,7 +68,7 @@ create table player.tb_lyric (
     lyr_music_id int references player.tb_music (mus_id) not null
 );
 
-create sequence player.tb_lyric_id_seq
+create sequence if not exists player.tb_lyric_id_seq
     minvalue 1
     increment 1
     cache 1
@@ -90,16 +90,16 @@ EXECUTE PROCEDURE player.update_updated_at_tb_lyric();
 /* */
 
 /* */
-create table player.tb_queue (
+create table if not exists player.tb_queue (
     que_id int primary key,
     que_external_user_id varchar(255) not null,
     que_created_at timestamp not null default now(),
     que_updated_at timestamp not null default now()
 );
 
-create index search_ext_user_id_queue on player.tb_queue (que_external_user_id);
+create index if not exists search_ext_user_id_queue on player.tb_queue (que_external_user_id);
 
-create sequence player.tb_queue_id_seq
+create sequence if not exists player.tb_queue_id_seq
     minvalue 1
     increment 1
     cache 1
@@ -121,7 +121,7 @@ EXECUTE PROCEDURE player.update_updated_at_tb_queue();
 /* */
 
 /* */
-create table player.tb_music_queue (
+create table if not exists player.tb_music_queue (
     muq_position int not null,
     muq_created_at timestamp not null default now(),
     muq_queue_id int not null references player.tb_queue (que_id),
@@ -133,23 +133,25 @@ create table player.tb_music_queue (
 /* */
 
 /* */
-create table player.tb_playlist (
+create table if not exists player.tb_playlist (
     ply_id int primary key,
     ply_name varchar(200) not null,
     ply_cover_url varchar(255) default null,
+    ply_visible_public boolean default true,
     ply_created_at timestamp not null default now(),
     ply_updated_at timestamp not null default now(),
-    ply_external_user_id varchar(255) not null
+    ply_external_user_id varchar(255) not null,
+    ply_external_cover_id varchar(255)
 );
 
-create sequence player.tb_playlist_id_seq
+create sequence if not exists player.tb_playlist_id_seq
     minvalue 1
     increment 1
     cache 1
     start 1
     owned by player.tb_playlist.ply_id;
 
-create index search_ext_user_id_playlist on player.tb_playlist (ply_external_user_id);
+create index if not exists search_ext_user_id_playlist on player.tb_playlist (ply_external_user_id);
 
 CREATE FUNCTION player.update_updated_at_tb_playlist()
     RETURNS TRIGGER AS $$
@@ -166,7 +168,7 @@ EXECUTE PROCEDURE player.update_updated_at_tb_playlist();
 /* */
 
 /* */
-create table player.tb_playlist_music (
+create table if not exists player.tb_playlist_music (
     plm_position integer not null,
     plm_created_at timestamp not null default now(),
     plm_updated_at timestamp not null default now(),

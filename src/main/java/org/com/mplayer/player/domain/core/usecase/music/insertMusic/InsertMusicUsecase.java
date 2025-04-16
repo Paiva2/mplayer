@@ -16,7 +16,7 @@ import org.com.mplayer.player.domain.ports.out.external.CoverExternalIntegration
 import org.com.mplayer.player.domain.ports.out.external.FileExternalIntegrationPort;
 import org.com.mplayer.player.domain.ports.out.external.LyricsExternalIntegrationPort;
 import org.com.mplayer.player.domain.ports.out.external.UserExternalIntegrationPort;
-import org.com.mplayer.player.domain.ports.out.external.dto.FindUserExternalProfileDTO;
+import org.com.mplayer.player.domain.ports.out.external.dto.FindUserExternalProfileOutputPort;
 import org.com.mplayer.player.domain.ports.out.utils.FileUtilsPort;
 import org.com.mplayer.player.infra.annotations.Usecase;
 import org.springframework.web.multipart.MultipartFile;
@@ -48,7 +48,7 @@ public class InsertMusicUsecase implements InsertMusicUsecasePort {
     @Override
     @Transactional
     public void execute(MultipartFile musicFile) {
-        FindUserExternalProfileDTO user = findUser();
+        FindUserExternalProfileOutputPort user = findUser();
 
         String contentType = fileUtilsPort.getContentType(musicFile);
 
@@ -80,7 +80,7 @@ public class InsertMusicUsecase implements InsertMusicUsecasePort {
         insertMusicLastPositionQueue(queue, music);
     }
 
-    private FindUserExternalProfileDTO findUser() {
+    private FindUserExternalProfileOutputPort findUser() {
         return userExternalIntegrationPort.findByExternalId();
     }
 

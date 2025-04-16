@@ -13,6 +13,8 @@ public interface MusicDataProviderPort {
 
     Optional<Music> findById(Long id);
 
+    Optional<Music> findByIdAndUserId(Long id, String externalUserId);
+
     Optional<Music> findByIdWithDeps(Long id);
 
     void remove(Music music);

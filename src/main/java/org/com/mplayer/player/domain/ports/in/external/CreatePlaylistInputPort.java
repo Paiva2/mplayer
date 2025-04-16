@@ -4,12 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RemoveMusicQueueInputPort {
-    private Long musicId;
-    private Integer position;
+public class CreatePlaylistInputPort {
+    private String name;
+    private Boolean visiblePublic;
+    private MultipartFile cover;
 }

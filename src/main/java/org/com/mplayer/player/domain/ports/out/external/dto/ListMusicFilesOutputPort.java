@@ -14,7 +14,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ListMusicFilesDTO {
+public class ListMusicFilesOutputPort {
     private int page;
     private int size;
     private long totalMusics;

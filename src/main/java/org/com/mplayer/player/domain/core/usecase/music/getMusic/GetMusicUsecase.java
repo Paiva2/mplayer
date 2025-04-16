@@ -7,8 +7,8 @@ import org.com.mplayer.player.domain.core.usecase.common.exception.MusicNotFound
 import org.com.mplayer.player.domain.ports.in.usecase.GetMusicUsecasePort;
 import org.com.mplayer.player.domain.ports.out.data.MusicDataProviderPort;
 import org.com.mplayer.player.domain.ports.out.external.UserExternalIntegrationPort;
-import org.com.mplayer.player.domain.ports.out.external.dto.FindUserExternalProfileDTO;
-import org.com.mplayer.player.domain.ports.out.external.dto.GetMusicDTO;
+import org.com.mplayer.player.domain.ports.out.external.dto.FindUserExternalProfileOutputPort;
+import org.com.mplayer.player.domain.ports.out.external.dto.GetMusicOutputPort;
 import org.com.mplayer.player.infra.annotations.Usecase;
 
 @Usecase
@@ -18,8 +18,8 @@ public class GetMusicUsecase implements GetMusicUsecasePort {
     private final MusicDataProviderPort musicDataProviderPort;
 
     @Override
-    public GetMusicDTO execute(Long musicId) {
-        FindUserExternalProfileDTO user = findUser();
+    public GetMusicOutputPort execute(Long musicId) {
+        FindUserExternalProfileOutputPort user = findUser();
         Music music = findMusic(musicId);
 
         checkMusicUser(user, music);
@@ -27,7 +27,7 @@ public class GetMusicUsecase implements GetMusicUsecasePort {
         return mountOutput(music);
     }
 
-    private FindUserExternalProfileDTO findUser() {
+    private FindUserExternalProfileOutputPort findUser() {
         return userExternalIntegrationPort.findByExternalId();
     }
 
@@ -35,13 +35,13 @@ public class GetMusicUsecase implements GetMusicUsecasePort {
         return musicDataProviderPort.findByIdWithDeps(musicId).orElseThrow(MusicNotFoundException::new);
     }
 
-    private void checkMusicUser(FindUserExternalProfileDTO user, Music music) {
+    private void checkMusicUser(FindUserExternalProfileOutputPort user, Music music) {
         if (!music.getExternalUserId().equals(user.getId().toString())) {
             throw new MusicNotBelongUserException();
         }
     }
 
-    private GetMusicDTO mountOutput(Music music) {
-        return new GetMusicDTO(music);
+    private GetMusicOutputPort mountOutput(Music music) {
+        return new GetMusicOutputPort(music);
     }
 }

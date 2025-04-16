@@ -11,7 +11,7 @@ import org.com.mplayer.player.domain.ports.in.usecase.RemoveMusicQueueUsecasePor
 import org.com.mplayer.player.domain.ports.out.data.MusicQueueDataProviderPort;
 import org.com.mplayer.player.domain.ports.out.data.QueueDataProviderPort;
 import org.com.mplayer.player.domain.ports.out.external.UserExternalIntegrationPort;
-import org.com.mplayer.player.domain.ports.out.external.dto.FindUserExternalProfileDTO;
+import org.com.mplayer.player.domain.ports.out.external.dto.FindUserExternalProfileOutputPort;
 import org.com.mplayer.player.infra.annotations.Usecase;
 
 @Usecase
@@ -24,7 +24,7 @@ public class RemoveMusicQueueUsecase implements RemoveMusicQueueUsecasePort {
     @Override
     @Transactional
     public void execute(RemoveMusicQueueInputPort input) {
-        FindUserExternalProfileDTO user = findUser();
+        FindUserExternalProfileOutputPort user = findUser();
 
         Queue userQueue = findQueue(user.getId().toString());
         MusicQueue musicQueue = findMusicQueue(userQueue, input);
@@ -32,7 +32,7 @@ public class RemoveMusicQueueUsecase implements RemoveMusicQueueUsecasePort {
         removeMusicQueue(musicQueue, userQueue.getId());
     }
 
-    private FindUserExternalProfileDTO findUser() {
+    private FindUserExternalProfileOutputPort findUser() {
         return userExternalIntegrationPort.findByExternalId();
     }
 

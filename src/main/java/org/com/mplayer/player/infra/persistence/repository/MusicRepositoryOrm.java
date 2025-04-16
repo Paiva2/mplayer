@@ -32,4 +32,6 @@ public interface MusicRepositoryOrm extends JpaRepository<MusicEntity, Long> {
         "and (:fileType is null or mus_file_type = :fileType) " +
         "and (:artist is null or mus_artist ilike '%' || :artist || '%')", nativeQuery = true)
     Page<MusicEntity> findAllByExternalUserFiltering(@Param("externalUserId") String externalUserId, @Param("title") String title, @Param("fileType") String fileType, @Param("artist") String artist, Pageable pageable);
+
+    Optional<MusicEntity> findByIdAndExternalUserId(Long id, String externalUserId);
 }

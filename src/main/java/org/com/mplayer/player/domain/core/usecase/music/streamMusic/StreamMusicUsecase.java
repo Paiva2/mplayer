@@ -9,8 +9,8 @@ import org.com.mplayer.player.domain.ports.in.usecase.StreamMusicUsecasePort;
 import org.com.mplayer.player.domain.ports.out.data.MusicDataProviderPort;
 import org.com.mplayer.player.domain.ports.out.external.FileExternalIntegrationPort;
 import org.com.mplayer.player.domain.ports.out.external.UserExternalIntegrationPort;
-import org.com.mplayer.player.domain.ports.out.external.dto.FindUserExternalProfileDTO;
-import org.com.mplayer.player.domain.ports.out.external.dto.StreamMusicDTO;
+import org.com.mplayer.player.domain.ports.out.external.dto.FindUserExternalProfileOutputPort;
+import org.com.mplayer.player.domain.ports.out.external.dto.StreamMusicOutputPort;
 import org.com.mplayer.player.infra.annotations.Usecase;
 
 import java.util.Map;
@@ -24,8 +24,8 @@ public class StreamMusicUsecase implements StreamMusicUsecasePort {
     private final MusicDataProviderPort musicDataProviderPort;
     private final FileExternalIntegrationPort fileExternalIntegrationPort;
 
-    public StreamMusicDTO execute(Long musicId, String byteRange) {
-        FindUserExternalProfileDTO user = findUser();
+    public StreamMusicOutputPort execute(Long musicId, String byteRange) {
+        FindUserExternalProfileOutputPort user = findUser();
 
         Music music = findMusic(musicId);
 
@@ -37,7 +37,7 @@ public class StreamMusicUsecase implements StreamMusicUsecasePort {
         return mountOutput(stream, defineMediaType(music.getFileType()));
     }
 
-    private FindUserExternalProfileDTO findUser() {
+    private FindUserExternalProfileOutputPort findUser() {
         return userExternalIntegrationPort.findByExternalId();
     }
 
@@ -45,7 +45,7 @@ public class StreamMusicUsecase implements StreamMusicUsecasePort {
         return musicDataProviderPort.findByIdWithDeps(musicId).orElseThrow(MusicNotFoundException::new);
     }
 
-    private void checkMusicUser(FindUserExternalProfileDTO user, Music music) {
+    private void checkMusicUser(FindUserExternalProfileOutputPort user, Music music) {
         if (!music.getExternalUserId().equals(user.getId().toString())) {
             throw new MusicNotBelongUserException();
         }
@@ -62,8 +62,8 @@ public class StreamMusicUsecase implements StreamMusicUsecasePort {
         return mediaType;
     }
 
-    private StreamMusicDTO mountOutput(Map<String, Object> stream, String mediaType) {
-        return StreamMusicDTO.builder()
+    private StreamMusicOutputPort mountOutput(Map<String, Object> stream, String mediaType) {
+        return StreamMusicOutputPort.builder()
             .content((byte[]) stream.get("content"))
             .rangeLength((long) stream.get("rangeLength"))
             .end((long) stream.get("end"))

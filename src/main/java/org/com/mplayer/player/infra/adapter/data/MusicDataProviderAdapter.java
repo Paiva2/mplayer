@@ -45,6 +45,13 @@ public class MusicDataProviderAdapter implements MusicDataProviderPort {
     }
 
     @Override
+    public Optional<Music> findByIdAndUserId(Long id, String externalUserId) {
+        Optional<MusicEntity> music = repository.findByIdAndExternalUserId(id, externalUserId);
+        if (music.isEmpty()) return Optional.empty();
+        return Optional.of(mapper.toDomain(music.get()));
+    }
+
+    @Override
     public Optional<Music> findByIdWithDeps(Long id) {
         Optional<MusicEntity> music = repository.findByIdWithDeps(id);
         if (music.isEmpty()) return Optional.empty();

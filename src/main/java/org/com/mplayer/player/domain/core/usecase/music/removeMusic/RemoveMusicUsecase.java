@@ -13,7 +13,7 @@ import org.com.mplayer.player.domain.ports.in.usecase.RemoveMusicUsecasePort;
 import org.com.mplayer.player.domain.ports.out.data.*;
 import org.com.mplayer.player.domain.ports.out.external.FileExternalIntegrationPort;
 import org.com.mplayer.player.domain.ports.out.external.UserExternalIntegrationPort;
-import org.com.mplayer.player.domain.ports.out.external.dto.FindUserExternalProfileDTO;
+import org.com.mplayer.player.domain.ports.out.external.dto.FindUserExternalProfileOutputPort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,7 +36,7 @@ public class RemoveMusicUsecase implements RemoveMusicUsecasePort {
     @Override
     @Transactional
     public void execute(Long musicId) {
-        FindUserExternalProfileDTO user = findUser();
+        FindUserExternalProfileOutputPort user = findUser();
 
         Music music = findMusic(musicId);
 
@@ -55,7 +55,7 @@ public class RemoveMusicUsecase implements RemoveMusicUsecasePort {
         removeMusicCoverExternal(music);
     }
 
-    private FindUserExternalProfileDTO findUser() {
+    private FindUserExternalProfileOutputPort findUser() {
         return userExternalIntegrationPort.findByExternalId();
     }
 
@@ -72,7 +72,7 @@ public class RemoveMusicUsecase implements RemoveMusicUsecasePort {
 
         for (MusicQueue musicQueue : musicsQueue) {
             Integer positionRemoved = musicQueue.getPosition();
-            
+
             musicQueueDataProviderPort.remove(musicQueue);
             musicQueueDataProviderPort.updateDecreasePositionsHigher(queue.getId(), positionRemoved);
         }

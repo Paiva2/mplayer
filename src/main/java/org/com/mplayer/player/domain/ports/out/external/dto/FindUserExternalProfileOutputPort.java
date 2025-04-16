@@ -12,7 +12,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FindUserExternalProfileDTO {
+public class FindUserExternalProfileOutputPort {
     private Long id;
     private String email;
     private String profilePicture;

@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ListQueueMusicsDTO {
+public class ListQueueMusicsOutputPort {
     private Long queueId;
     private List<MusicQueueDTO> musics;
 

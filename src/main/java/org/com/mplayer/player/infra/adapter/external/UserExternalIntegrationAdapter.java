@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.com.mplayer.player.domain.ports.out.external.UserExternalIntegrationPort;
-import org.com.mplayer.player.domain.ports.out.external.dto.FindUserExternalProfileDTO;
+import org.com.mplayer.player.domain.ports.out.external.dto.FindUserExternalProfileOutputPort;
 import org.com.mplayer.player.infra.adapter.data.exception.ExternalErrorException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -24,7 +24,7 @@ public class UserExternalIntegrationAdapter implements UserExternalIntegrationPo
     private final RestTemplate restTemplate;
 
     @Override
-    public FindUserExternalProfileDTO findByExternalId() {
+    public FindUserExternalProfileOutputPort findByExternalId() {
         try {
             String url = userServiceEndpoint.concat("/profile");
 
@@ -35,7 +35,7 @@ public class UserExternalIntegrationAdapter implements UserExternalIntegrationPo
 
             ResponseEntity<String> profileResponse = restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class);
 
-            return mapper.readValue(profileResponse.getBody(), FindUserExternalProfileDTO.class);
+            return mapper.readValue(profileResponse.getBody(), FindUserExternalProfileOutputPort.class);
         } catch (HttpServerErrorException e) {
             String message = "[UserExternalIntegrationAdapter] Error: " + e.getMessage();
             log.error(message);

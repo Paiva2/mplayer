@@ -5,8 +5,8 @@ import org.com.mplayer.player.domain.core.entity.Music;
 import org.com.mplayer.player.domain.core.enums.EFileType;
 import org.com.mplayer.player.domain.ports.in.usecase.ListMusicFilesUsecasePort;
 import org.com.mplayer.player.domain.ports.out.external.UserExternalIntegrationPort;
-import org.com.mplayer.player.domain.ports.out.external.dto.FindUserExternalProfileDTO;
-import org.com.mplayer.player.domain.ports.out.external.dto.ListMusicFilesDTO;
+import org.com.mplayer.player.domain.ports.out.external.dto.FindUserExternalProfileOutputPort;
+import org.com.mplayer.player.domain.ports.out.external.dto.ListMusicFilesOutputPort;
 import org.com.mplayer.player.infra.adapter.data.MusicDataProviderAdapter;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
@@ -18,7 +18,7 @@ public class ListMusicFilesUsecase implements ListMusicFilesUsecasePort {
     private final MusicDataProviderAdapter musicDataProviderAdapter;
 
     @Override
-    public ListMusicFilesDTO execute(int page, int size, String title, String fileType, String artist, String order) {
+    public ListMusicFilesOutputPort execute(int page, int size, String title, String fileType, String artist, String order) {
         if (page < 1) {
             page = 1;
         }
@@ -29,7 +29,7 @@ public class ListMusicFilesUsecase implements ListMusicFilesUsecasePort {
             size = 100;
         }
 
-        FindUserExternalProfileDTO user = findUser();
+        FindUserExternalProfileOutputPort user = findUser();
 
         EFileType fileTypeFilter = checkFileType(fileType);
 
@@ -38,7 +38,7 @@ public class ListMusicFilesUsecase implements ListMusicFilesUsecasePort {
         return mountOutput(musics);
     }
 
-    private FindUserExternalProfileDTO findUser() {
+    private FindUserExternalProfileOutputPort findUser() {
         return userExternalIntegrationPort.findByExternalId();
     }
 
@@ -56,13 +56,13 @@ public class ListMusicFilesUsecase implements ListMusicFilesUsecasePort {
         return musicDataProviderAdapter.findAllByExternalUser(page, size, externalUserId, title, fileType, artist, orderBy);
     }
 
-    private ListMusicFilesDTO mountOutput(Page<Music> musics) {
-        return ListMusicFilesDTO.builder()
+    private ListMusicFilesOutputPort mountOutput(Page<Music> musics) {
+        return ListMusicFilesOutputPort.builder()
             .page(musics.getNumber() + 1)
             .size(musics.getSize())
             .totalMusics(musics.getTotalElements())
             .totalPages(musics.getTotalPages())
-            .musics(musics.getContent().stream().map(ListMusicFilesDTO.MusicDTO::new).toList())
+            .musics(musics.getContent().stream().map(ListMusicFilesOutputPort.MusicDTO::new).toList())
             .build();
     }
 }

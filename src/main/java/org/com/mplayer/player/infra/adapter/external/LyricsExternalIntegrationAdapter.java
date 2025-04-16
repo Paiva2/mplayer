@@ -5,8 +5,8 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.com.mplayer.player.domain.ports.out.external.LyricsExternalIntegrationPort;
-import org.com.mplayer.player.domain.ports.out.external.dto.FindLyricByArtistAndTrackDTO;
-import org.com.mplayer.player.domain.ports.out.external.dto.FindLyricByArtistAndTrackXmlFormatDTO;
+import org.com.mplayer.player.domain.ports.out.external.dto.FindLyricByArtistAndTrackOutputPort;
+import org.com.mplayer.player.domain.ports.out.external.dto.FindLyricByArtistAndTrackXmlFormatOutputPort;
 import org.com.mplayer.player.infra.adapter.data.exception.ExternalErrorException;
 import org.com.mplayer.player.infra.constants.ExternalIntegrationUrl;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +34,7 @@ public class LyricsExternalIntegrationAdapter implements LyricsExternalIntegrati
                 .concat(track);
 
             ResponseEntity<String> responseFirstService = restTemplate.getForEntity(urlFirstService, String.class);
-            FindLyricByArtistAndTrackDTO lyricBody = objectMapper.readValue(responseFirstService.getBody(), FindLyricByArtistAndTrackDTO.class);
+            FindLyricByArtistAndTrackOutputPort lyricBody = objectMapper.readValue(responseFirstService.getBody(), FindLyricByArtistAndTrackOutputPort.class);
 
             return lyricBody.getLyrics();
         } catch (HttpServerErrorException | HttpClientErrorException e) {
@@ -60,7 +60,7 @@ public class LyricsExternalIntegrationAdapter implements LyricsExternalIntegrati
                 .concat(track);
 
             ResponseEntity<String> responseSecondService = restTemplate.getForEntity(urlSecondService, String.class);
-            FindLyricByArtistAndTrackXmlFormatDTO lyric = xmlMapper.readValue(responseSecondService.getBody(), FindLyricByArtistAndTrackXmlFormatDTO.class);
+            FindLyricByArtistAndTrackXmlFormatOutputPort lyric = xmlMapper.readValue(responseSecondService.getBody(), FindLyricByArtistAndTrackXmlFormatOutputPort.class);
 
             return lyric.getLyric();
         } catch (HttpServerErrorException | HttpClientErrorException e) {

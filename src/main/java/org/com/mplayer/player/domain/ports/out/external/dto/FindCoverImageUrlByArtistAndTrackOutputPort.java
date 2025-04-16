@@ -12,27 +12,36 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class FindCoverImageUrlByArtistAndAlbumDTO {
-    private Album album;
+public class FindCoverImageUrlByArtistAndTrackOutputPort {
+    public Track track;
 
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class Album {
-        private String artist;
+    public static class Track {
         private String name;
-        private List<Image> image;
+        private Album album;
 
         @Data
         @NoArgsConstructor
         @AllArgsConstructor
         @JsonIgnoreProperties(ignoreUnknown = true)
-        public static class Image {
-            private String size;
+        public static class Album {
+            private String artist;
+            private String title;
+            private List<Album.Image> image;
 
-            @JsonProperty("#text")
-            private String url;
+            @Data
+            @NoArgsConstructor
+            @AllArgsConstructor
+            @JsonIgnoreProperties(ignoreUnknown = true)
+            public static class Image {
+                private String size;
+
+                @JsonProperty("#text")
+                private String url;
+            }
         }
     }
 }

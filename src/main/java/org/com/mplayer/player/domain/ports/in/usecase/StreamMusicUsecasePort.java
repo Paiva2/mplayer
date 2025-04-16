@@ -1,7 +1,7 @@
 package org.com.mplayer.player.domain.ports.in.usecase;
 
-import org.com.mplayer.player.domain.ports.out.external.dto.StreamMusicDTO;
+import org.com.mplayer.player.domain.ports.out.external.dto.StreamMusicOutputPort;
 
 public interface StreamMusicUsecasePort {
-    StreamMusicDTO execute(Long musicId, String byteRange);
+    StreamMusicOutputPort execute(Long musicId, String byteRange);
 }

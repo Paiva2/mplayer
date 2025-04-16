@@ -12,7 +12,7 @@ import org.com.mplayer.player.domain.ports.out.data.MusicDataProviderPort;
 import org.com.mplayer.player.domain.ports.out.data.MusicQueueDataProviderPort;
 import org.com.mplayer.player.domain.ports.out.data.QueueDataProviderPort;
 import org.com.mplayer.player.domain.ports.out.external.UserExternalIntegrationPort;
-import org.com.mplayer.player.domain.ports.out.external.dto.FindUserExternalProfileDTO;
+import org.com.mplayer.player.domain.ports.out.external.dto.FindUserExternalProfileOutputPort;
 import org.com.mplayer.player.infra.annotations.Usecase;
 
 @Usecase
@@ -26,7 +26,7 @@ public class InsertMusicQueueUsecase implements InsertMusicQueueUsecasePort {
     @Override
     @Transactional
     public void execute(Long musicId) {
-        FindUserExternalProfileDTO user = findUser();
+        FindUserExternalProfileOutputPort user = findUser();
         Music music = findMusic(musicId);
         checkUserMusic(user, music);
 
@@ -35,7 +35,7 @@ public class InsertMusicQueueUsecase implements InsertMusicQueueUsecasePort {
         persistMusicQueue(userQueue, music);
     }
 
-    private FindUserExternalProfileDTO findUser() {
+    private FindUserExternalProfileOutputPort findUser() {
         return userExternalIntegrationPort.findByExternalId();
     }
 
@@ -47,12 +47,12 @@ public class InsertMusicQueueUsecase implements InsertMusicQueueUsecasePort {
         return musicDataProviderPort.findByIdWithDeps(musicId).orElseThrow(MusicNotFoundException::new);
     }
 
-    private void checkUserMusic(FindUserExternalProfileDTO user, Music music) {
+    private void checkUserMusic(FindUserExternalProfileOutputPort user, Music music) {
         if (!user.getId().toString().equals(music.getExternalUserId())) {
             throw new MusicNotBelongUserException();
         }
     }
-    
+
     private void persistMusicQueue(Queue queue, Music music) {
         musicQueueDataProviderPort.insertMusicQueueLastPosition(queue.getId(), music.getId());
     }

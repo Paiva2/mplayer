@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.com.mplayer.player.domain.ports.out.external.CoverExternalIntegrationPort;
-import org.com.mplayer.player.domain.ports.out.external.dto.FindCoverImageUrlByArtistAndAlbumDTO;
-import org.com.mplayer.player.domain.ports.out.external.dto.FindCoverImageUrlByArtistAndTrackDTO;
+import org.com.mplayer.player.domain.ports.out.external.dto.FindCoverImageUrlByArtistAndAlbumOutputPort;
+import org.com.mplayer.player.domain.ports.out.external.dto.FindCoverImageUrlByArtistAndTrackOutputPort;
 import org.com.mplayer.player.infra.adapter.data.exception.ExternalErrorException;
 import org.com.mplayer.player.infra.constants.ExternalIntegrationUrl;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,14 +41,14 @@ public class CoverExternalIntegrationAdapter implements CoverExternalIntegration
                 .concat("&format=json");
 
             ResponseEntity<String> responseFirstService = restTemplate.getForEntity(url, String.class);
-            FindCoverImageUrlByArtistAndTrackDTO coverBody = objectMapper.readValue(responseFirstService.getBody(), FindCoverImageUrlByArtistAndTrackDTO.class);
+            FindCoverImageUrlByArtistAndTrackOutputPort coverBody = objectMapper.readValue(responseFirstService.getBody(), FindCoverImageUrlByArtistAndTrackOutputPort.class);
 
-            Optional<FindCoverImageUrlByArtistAndTrackDTO.Track.Album.Image> albumImage = coverBody.getTrack().getAlbum().getImage().stream().filter(albumDto -> albumDto.getSize().equals("extralarge")).findFirst();
+            Optional<FindCoverImageUrlByArtistAndTrackOutputPort.Track.Album.Image> albumImage = coverBody.getTrack().getAlbum().getImage().stream().filter(albumDto -> albumDto.getSize().equals("extralarge")).findFirst();
 
             if (albumImage.isPresent()) {
                 return albumImage.get().getUrl();
             } else {
-                Optional<FindCoverImageUrlByArtistAndTrackDTO.Track.Album.Image> alternativeCoverImageSize = coverBody.getTrack().getAlbum().getImage().stream().filter(albumDto -> albumDto.getSize().equals("large") || albumDto.getSize().equals("medium") || albumDto.getSize().equals("mega")).findFirst();
+                Optional<FindCoverImageUrlByArtistAndTrackOutputPort.Track.Album.Image> alternativeCoverImageSize = coverBody.getTrack().getAlbum().getImage().stream().filter(albumDto -> albumDto.getSize().equals("large") || albumDto.getSize().equals("medium") || albumDto.getSize().equals("mega")).findFirst();
 
                 if (alternativeCoverImageSize.isPresent()) {
                     return alternativeCoverImageSize.get().getUrl();
@@ -82,14 +82,14 @@ public class CoverExternalIntegrationAdapter implements CoverExternalIntegration
                 .concat("&format=json");
 
             ResponseEntity<String> responseFirstService = restTemplate.getForEntity(url, String.class);
-            FindCoverImageUrlByArtistAndAlbumDTO coverBody = objectMapper.readValue(responseFirstService.getBody(), FindCoverImageUrlByArtistAndAlbumDTO.class);
+            FindCoverImageUrlByArtistAndAlbumOutputPort coverBody = objectMapper.readValue(responseFirstService.getBody(), FindCoverImageUrlByArtistAndAlbumOutputPort.class);
 
-            Optional<FindCoverImageUrlByArtistAndAlbumDTO.Album.Image> albumImage = coverBody.getAlbum().getImage().stream().filter(albumDto -> albumDto.getSize().equals("extralarge")).findFirst();
+            Optional<FindCoverImageUrlByArtistAndAlbumOutputPort.Album.Image> albumImage = coverBody.getAlbum().getImage().stream().filter(albumDto -> albumDto.getSize().equals("extralarge")).findFirst();
 
             if (albumImage.isPresent()) {
                 return albumImage.get().getUrl();
             } else {
-                Optional<FindCoverImageUrlByArtistAndAlbumDTO.Album.Image> alternativeCoverImageSize = coverBody.getAlbum().getImage().stream().filter(albumDto -> albumDto.getSize().equals("large") || albumDto.getSize().equals("medium") || albumDto.getSize().equals("mega")).findFirst();
+                Optional<FindCoverImageUrlByArtistAndAlbumOutputPort.Album.Image> alternativeCoverImageSize = coverBody.getAlbum().getImage().stream().filter(albumDto -> albumDto.getSize().equals("large") || albumDto.getSize().equals("medium") || albumDto.getSize().equals("mega")).findFirst();
 
                 if (alternativeCoverImageSize.isPresent()) {
                     return alternativeCoverImageSize.get().getUrl();

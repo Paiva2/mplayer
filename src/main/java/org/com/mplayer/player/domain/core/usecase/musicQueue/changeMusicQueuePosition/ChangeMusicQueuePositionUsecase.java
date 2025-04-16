@@ -9,7 +9,7 @@ import org.com.mplayer.player.domain.ports.in.usecase.ChangeMusicQueuePositionUs
 import org.com.mplayer.player.domain.ports.out.data.MusicQueueDataProviderPort;
 import org.com.mplayer.player.domain.ports.out.data.QueueDataProviderPort;
 import org.com.mplayer.player.domain.ports.out.external.UserExternalIntegrationPort;
-import org.com.mplayer.player.domain.ports.out.external.dto.FindUserExternalProfileDTO;
+import org.com.mplayer.player.domain.ports.out.external.dto.FindUserExternalProfileOutputPort;
 import org.com.mplayer.player.infra.annotations.Usecase;
 
 import java.util.List;
@@ -26,7 +26,7 @@ public class ChangeMusicQueuePositionUsecase implements ChangeMusicQueuePosition
     public void execute(Long musicId, Integer currentPosition, Integer newPosition) {
         if (currentPosition.equals(newPosition)) return;
 
-        FindUserExternalProfileDTO user = findUser();
+        FindUserExternalProfileOutputPort user = findUser();
         Queue userQueue = findQueue(user.getId().toString());
         List<MusicQueue> musicsQueue = findAllMusicsQueue(userQueue);
 
@@ -37,7 +37,7 @@ public class ChangeMusicQueuePositionUsecase implements ChangeMusicQueuePosition
         updateMusicQueuePosition(musicsQueue, musicId, currentPosition, newPosition);
     }
 
-    private FindUserExternalProfileDTO findUser() {
+    private FindUserExternalProfileOutputPort findUser() {
         return userExternalIntegrationPort.findByExternalId();
     }
 

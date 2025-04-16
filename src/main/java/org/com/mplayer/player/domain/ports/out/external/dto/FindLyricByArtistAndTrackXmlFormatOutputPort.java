@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class FindLyricByArtistAndTrackXmlFormatDTO {
+public class FindLyricByArtistAndTrackXmlFormatOutputPort {
     @JsonProperty("LyricSong")
     private String lyricSong;
 

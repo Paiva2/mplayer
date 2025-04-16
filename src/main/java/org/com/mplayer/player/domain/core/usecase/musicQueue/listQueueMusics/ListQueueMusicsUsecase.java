@@ -8,8 +8,8 @@ import org.com.mplayer.player.domain.ports.in.usecase.ListQueueMusicsUsecasePort
 import org.com.mplayer.player.domain.ports.out.data.MusicQueueDataProviderPort;
 import org.com.mplayer.player.domain.ports.out.data.QueueDataProviderPort;
 import org.com.mplayer.player.domain.ports.out.external.UserExternalIntegrationPort;
-import org.com.mplayer.player.domain.ports.out.external.dto.FindUserExternalProfileDTO;
-import org.com.mplayer.player.domain.ports.out.external.dto.ListQueueMusicsDTO;
+import org.com.mplayer.player.domain.ports.out.external.dto.FindUserExternalProfileOutputPort;
+import org.com.mplayer.player.domain.ports.out.external.dto.ListQueueMusicsOutputPort;
 import org.com.mplayer.player.infra.annotations.Usecase;
 
 import java.util.List;
@@ -22,8 +22,8 @@ public class ListQueueMusicsUsecase implements ListQueueMusicsUsecasePort {
     private final MusicQueueDataProviderPort musicQueueDataProviderPort;
 
     @Override
-    public ListQueueMusicsDTO execute() {
-        FindUserExternalProfileDTO user = findUser();
+    public ListQueueMusicsOutputPort execute() {
+        FindUserExternalProfileOutputPort user = findUser();
 
         Queue queue = findQueue(user.getId().toString());
         List<MusicQueue> musicsQueue = findMusicsQueue(queue.getId());
@@ -31,7 +31,7 @@ public class ListQueueMusicsUsecase implements ListQueueMusicsUsecasePort {
         return mountOutput(queue.getId(), musicsQueue);
     }
 
-    private FindUserExternalProfileDTO findUser() {
+    private FindUserExternalProfileOutputPort findUser() {
         return userExternalIntegrationPort.findByExternalId();
     }
 
@@ -43,10 +43,10 @@ public class ListQueueMusicsUsecase implements ListQueueMusicsUsecasePort {
         return musicQueueDataProviderPort.getAllByQueue(queueId);
     }
 
-    private ListQueueMusicsDTO mountOutput(Long queueId, List<MusicQueue> musicsQueue) {
-        return ListQueueMusicsDTO.builder()
+    private ListQueueMusicsOutputPort mountOutput(Long queueId, List<MusicQueue> musicsQueue) {
+        return ListQueueMusicsOutputPort.builder()
             .queueId(queueId)
-            .musics(musicsQueue.stream().map(ListQueueMusicsDTO.MusicQueueDTO::new).toList())
+            .musics(musicsQueue.stream().map(ListQueueMusicsOutputPort.MusicQueueDTO::new).toList())
             .build();
     }
 }

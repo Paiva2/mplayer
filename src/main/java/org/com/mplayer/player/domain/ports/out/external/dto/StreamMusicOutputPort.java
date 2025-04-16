@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class StreamMusicDTO {
+public class StreamMusicOutputPort {
     private byte[] content;
     private long rangeLength;
     private long start;

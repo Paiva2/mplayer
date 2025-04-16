@@ -16,10 +16,12 @@ public class Playlist {
     private Long id;
     private String name;
     private String coverUrl;
+    private Boolean visiblePublic;
     private Date createdAt;
     private Date updatedAt;
 
     private String externalUserId;
+    private String externalCoverId;
 
     private List<PlaylistMusic> playlistMusics;
 }

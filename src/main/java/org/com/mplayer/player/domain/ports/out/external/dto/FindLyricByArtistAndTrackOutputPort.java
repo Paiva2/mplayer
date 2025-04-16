@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class FindLyricByArtistAndTrackDTO {
+public class FindLyricByArtistAndTrackOutputPort {
     private String lyrics;
 }
