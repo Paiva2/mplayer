@@ -7,8 +7,8 @@ import org.com.mplayer.player.domain.ports.out.data.PlaylistDataProviderPort;
 import org.com.mplayer.player.domain.ports.out.external.UserExternalIntegrationPort;
 import org.com.mplayer.player.domain.ports.out.external.dto.FindUserExternalProfileOutputPort;
 import org.com.mplayer.player.domain.ports.out.external.dto.PlaylistOutputPort;
+import org.com.mplayer.player.domain.ports.out.utils.PageData;
 import org.com.mplayer.player.infra.annotations.Usecase;
-import org.com.mplayer.users.domain.ports.out.utils.PageData;
 
 @Usecase
 @AllArgsConstructor

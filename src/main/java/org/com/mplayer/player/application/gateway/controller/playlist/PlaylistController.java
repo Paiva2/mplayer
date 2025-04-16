@@ -7,7 +7,7 @@ import org.com.mplayer.player.domain.ports.in.usecase.CreatePlaylistUsecasePort;
 import org.com.mplayer.player.domain.ports.in.usecase.DeletePlaylistUsecasePort;
 import org.com.mplayer.player.domain.ports.in.usecase.ListPlaylistsUsecasePort;
 import org.com.mplayer.player.domain.ports.out.external.dto.PlaylistOutputPort;
-import org.com.mplayer.users.domain.ports.out.utils.PageData;
+import org.com.mplayer.player.domain.ports.out.utils.PageData;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

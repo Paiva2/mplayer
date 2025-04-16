@@ -1,7 +1,7 @@
 package org.com.mplayer.player.domain.ports.out.data;
 
 import org.com.mplayer.player.domain.core.entity.Playlist;
-import org.com.mplayer.users.domain.ports.out.utils.PageData;
+import org.com.mplayer.player.domain.ports.out.utils.PageData;
 
 import java.util.Optional;
 
