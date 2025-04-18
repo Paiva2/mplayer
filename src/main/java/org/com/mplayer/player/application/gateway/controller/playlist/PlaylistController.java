@@ -3,6 +3,7 @@ package org.com.mplayer.player.application.gateway.controller.playlist;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.com.mplayer.player.domain.ports.in.external.CreatePlaylistInputPort;
+import org.com.mplayer.player.domain.ports.in.external.EditPlaylistInputPort;
 import org.com.mplayer.player.domain.ports.in.usecase.*;
 import org.com.mplayer.player.domain.ports.out.external.dto.GetOwnPlaylistOutputPort;
 import org.com.mplayer.player.domain.ports.out.external.dto.GetUserPlaylistOutputPort;
@@ -22,6 +23,7 @@ import static org.com.mplayer.MplayerApplication.API_PREFIX;
 @RequestMapping(API_PREFIX + "/player/playlist")
 public class PlaylistController {
     private final CreatePlaylistUsecasePort createPlaylistUsecasePort;
+    private final EditPlaylistUsecasePort editPlaylistUsecasePort;
     private final ListOwnPlaylistsUsecasePort listOwnPlaylistsUsecasePort;
     private final DeletePlaylistUsecasePort deletePlaylistUsecasePort;
     private final GetOwnPlaylistUsecasePort getOwnPlaylistUsecasePort;
@@ -105,4 +107,21 @@ public class PlaylistController {
         GetUserPlaylistOutputPort output = getUserPlaylistUsecasePort.execute(userId, playlistId, page, size);
         return new ResponseEntity<>(output, HttpStatus.OK);
     }
+
+    @PatchMapping("/{playlistId}/edit")
+    public ResponseEntity<Void> editPlaylist(
+        @PathVariable("playlistId") Long playlistId,
+        @RequestParam(name = "file", required = false) MultipartFile file,
+        @RequestParam(name = "playlist-name", required = false) String playlistName,
+        @RequestParam(name = "visible-public", required = false) Boolean visiblePublic
+    ) {
+        editPlaylistUsecasePort.execute(playlistId, EditPlaylistInputPort.builder()
+            .cover(file)
+            .name(playlistName)
+            .visiblePublic(visiblePublic)
+            .build()
+        );
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
 }
