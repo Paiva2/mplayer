@@ -45,7 +45,7 @@ public class ListOwnOwnPlaylistsUsecase implements ListOwnPlaylistsUsecasePort {
     }
 
     private PageData<Playlist> findPlaylists(String userId, int page, int size, String name, String direction) {
-        return playlistDataProviderPort.findAllByUser(userId, page, size, name, direction);
+        return playlistDataProviderPort.findAllByUser(userId, page, size, name, direction, null);
     }
 
     private PageData<PlaylistOutputPort> mountOutput(PageData<Playlist> playlists) {

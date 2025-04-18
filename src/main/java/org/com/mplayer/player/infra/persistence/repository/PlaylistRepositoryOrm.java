@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
@@ -23,8 +24,9 @@ public interface PlaylistRepositoryOrm extends JpaRepository<PlaylistEntity, Lon
         ") as plm " +
         "on ply.ply_id = plm.plm_playlist_id " +
         "where ply.ply_external_user_id = :userId " +
-        "and (:name is null or ply.ply_name ilike concat('%', :name, '%'))", nativeQuery = true)
-    Page<PlaylistEntity> findAllByUserId(String userId, String name, Pageable pageable);
+        "and (:name is null or ply.ply_name ilike concat('%', :name, '%')) " +
+        "and (:showOnlyPublic is null or ply.ply_visible_public = :showOnlyPublic)", nativeQuery = true)
+    Page<PlaylistEntity> findAllByUserId(@Param("userId") String userId, @Param("name") String name, @Param("showOnlyPublic") Boolean showOnlyPublic, Pageable pageable);
 
     @Modifying
     void deleteById(Long id);

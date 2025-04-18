@@ -10,7 +10,7 @@ public interface PlaylistDataProviderPort {
 
     Playlist persist(Playlist playlist);
 
-    PageData<Playlist> findAllByUser(String externalUserId, int page, int size, String name, String direction);
+    PageData<Playlist> findAllByUser(String externalUserId, int page, int size, String name, String direction, Boolean showOnlyPublic);
 
     Optional<Playlist> findByIdAndUserId(long id, String externalUserId);
 

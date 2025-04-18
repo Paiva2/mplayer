@@ -37,9 +37,9 @@ public class PlaylistDataProviderAdapter implements PlaylistDataProviderPort {
     }
 
     @Override
-    public PageData<Playlist> findAllByUser(String externalUserId, int page, int size, String name, String direction) {
+    public PageData<Playlist> findAllByUser(String externalUserId, int page, int size, String name, String direction, Boolean showOnlyPublic) {
         Pageable pageable = PageRequest.of(page - 1, size, Sort.Direction.fromString(direction), "ply_created_at");
-        Page<PlaylistEntity> playlists = repository.findAllByUserId(externalUserId, name, pageable);
+        Page<PlaylistEntity> playlists = repository.findAllByUserId(externalUserId, name, showOnlyPublic, pageable);
 
         return new PageData<>(
             playlists.getNumber() + 1,
