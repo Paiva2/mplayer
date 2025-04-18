@@ -130,10 +130,9 @@ public class FileExternalIntegrationAdapter implements FileExternalIntegrationPo
                 return new long[]{0, defaultMinEndValue};
             }
 
-            long start = Math.max(0, Long.parseLong(ranges[0]));
-            long end = ranges.length > 1 && !ranges[1].isEmpty() ?
-                Math.min(Long.parseLong(ranges[1]), fileSize - 1) :
-                defaultMinEndValue;
+            long start = Math.max(0, Long.parseLong(ranges[1].replaceAll("\\.", "")));
+            long endParsed = start + 2048L;
+            long end = Math.min(endParsed, fileSize - 1);
 
             return new long[]{start, end};
         } catch (Exception e) {
