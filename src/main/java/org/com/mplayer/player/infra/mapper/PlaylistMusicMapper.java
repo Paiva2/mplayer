@@ -1,5 +1,6 @@
 package org.com.mplayer.player.infra.mapper;
 
+import org.com.mplayer.player.domain.core.entity.Collection;
 import org.com.mplayer.player.domain.core.entity.Music;
 import org.com.mplayer.player.domain.core.entity.Playlist;
 import org.com.mplayer.player.domain.core.entity.PlaylistMusic;
@@ -29,6 +30,12 @@ public class PlaylistMusicMapper implements Mapper<PlaylistMusic, PlaylistMusicE
         if (persistenceEntity.getMusic() != null) {
             Music music = new Music();
             map(persistenceEntity.getMusic(), music);
+
+            if (persistenceEntity.getMusic().getCollection() != null) {
+                Collection collection = new Collection();
+                map(persistenceEntity.getMusic().getCollection(), collection);
+                music.setCollection(collection);
+            }
 
             playlistMusic.setMusic(music);
         }

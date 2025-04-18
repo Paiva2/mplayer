@@ -1,6 +1,8 @@
 package org.com.mplayer.player.infra.persistence.repository;
 
 import org.com.mplayer.player.infra.persistence.entity.PlaylistMusicEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -16,6 +18,13 @@ public interface PlaylistMusicRepository extends JpaRepository<PlaylistMusicEnti
         "order by plm.plm_position " +
         "desc limit 1), 0)", nativeQuery = true)
     Integer findLastPositionMusicByPlaylistId(@Param("playlistId") Long playlistId);
+
+    @Query("select pm from PlaylistMusicEntity pm " +
+        "join fetch pm.music mu " +
+        "join fetch pm.playlist ply " +
+        "left join fetch mu.collection col " +
+        "where ply.id = :playlistId")
+    Page<PlaylistMusicEntity> findAllByPlaylistId(Long playlistId, Pageable pageable);
 
     @Modifying
     void deleteAllByPlaylistId(Long playlistId);

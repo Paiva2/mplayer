@@ -1,8 +1,8 @@
-package org.com.mplayer.player.domain.core.usecase.playlist.listPlaylists;
+package org.com.mplayer.player.domain.core.usecase.playlist.listOwnPlaylists;
 
 import lombok.AllArgsConstructor;
 import org.com.mplayer.player.domain.core.entity.Playlist;
-import org.com.mplayer.player.domain.ports.in.usecase.ListPlaylistsUsecasePort;
+import org.com.mplayer.player.domain.ports.in.usecase.ListOwnPlaylistsUsecasePort;
 import org.com.mplayer.player.domain.ports.out.data.PlaylistDataProviderPort;
 import org.com.mplayer.player.domain.ports.out.external.UserExternalIntegrationPort;
 import org.com.mplayer.player.domain.ports.out.external.dto.FindUserExternalProfileOutputPort;
@@ -12,7 +12,7 @@ import org.com.mplayer.player.infra.annotations.Usecase;
 
 @Usecase
 @AllArgsConstructor
-public class ListPlaylistsUsecase implements ListPlaylistsUsecasePort {
+public class ListOwnOwnPlaylistsUsecase implements ListOwnPlaylistsUsecasePort {
     private final UserExternalIntegrationPort userExternalIntegrationPort;
 
     private final PlaylistDataProviderPort playlistDataProviderPort;
