@@ -28,4 +28,7 @@ public interface PlaylistMusicRepository extends JpaRepository<PlaylistMusicEnti
 
     @Modifying
     void deleteAllByPlaylistId(Long playlistId);
+
+    @Modifying
+    int deleteByPlaylistIdAndMusicId(Long playlistId, Long musicId);
 }

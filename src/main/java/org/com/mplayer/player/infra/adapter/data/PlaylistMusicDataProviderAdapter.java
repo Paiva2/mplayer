@@ -59,4 +59,9 @@ public class PlaylistMusicDataProviderAdapter implements PlaylistMusicDataProvid
     public void removeAllByPlaylist(Long playlistId) {
         repository.deleteAllByPlaylistId(playlistId);
     }
+
+    @Override
+    public int removeByPlaylistAndMusic(Long playlistId, Long musicId) {
+        return repository.deleteByPlaylistIdAndMusicId(playlistId, musicId);
+    }
 }

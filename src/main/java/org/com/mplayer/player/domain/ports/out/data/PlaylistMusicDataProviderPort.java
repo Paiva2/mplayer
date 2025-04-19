@@ -15,4 +15,6 @@ public interface PlaylistMusicDataProviderPort {
     Integer findLastPositionByPlaylistId(Long playlistId);
 
     void removeAllByPlaylist(Long playlistId);
+
+    int removeByPlaylistAndMusic(Long playlistId, Long musicId);
 }
