@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface PlaylistMusicRepository extends JpaRepository<PlaylistMusicEntity, PlaylistMusicEntity.KeyId> {
@@ -25,6 +26,13 @@ public interface PlaylistMusicRepository extends JpaRepository<PlaylistMusicEnti
         "left join fetch mu.collection col " +
         "where ply.id = :playlistId")
     Page<PlaylistMusicEntity> findAllByPlaylistId(Long playlistId, Pageable pageable);
+
+    @Query("select pm from PlaylistMusicEntity pm " +
+        "join fetch pm.music mu " +
+        "join fetch pm.playlist ply " +
+        "left join fetch mu.collection col " +
+        "where ply.id = :playlistId")
+    List<PlaylistMusicEntity> findAllByPlaylistId(Long playlistId);
 
     @Modifying
     void deleteAllByPlaylistId(Long playlistId);

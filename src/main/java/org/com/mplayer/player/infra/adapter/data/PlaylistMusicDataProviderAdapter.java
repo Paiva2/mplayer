@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -51,8 +52,20 @@ public class PlaylistMusicDataProviderAdapter implements PlaylistMusicDataProvid
     }
 
     @Override
+    public List<PlaylistMusic> persistAll(List<PlaylistMusic> playlistMusics) {
+        List<PlaylistMusicEntity> playlistMusic = repository.saveAll(playlistMusics.stream().map(mapper::toPersistence).toList());
+        return playlistMusic.stream().map(mapper::toDomain).toList();
+    }
+
+    @Override
     public Integer findLastPositionByPlaylistId(Long playlistId) {
         return repository.findLastPositionMusicByPlaylistId(playlistId);
+    }
+
+    @Override
+    public List<PlaylistMusic> findAllbyPlaylistId(Long playlistId) {
+        List<PlaylistMusicEntity> playlistMusic = repository.findAllByPlaylistId(playlistId);
+        return playlistMusic.stream().map(mapper::toDomain).toList();
     }
 
     @Override
