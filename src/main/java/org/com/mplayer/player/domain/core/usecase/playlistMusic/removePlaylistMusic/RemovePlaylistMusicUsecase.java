@@ -3,6 +3,7 @@ package org.com.mplayer.player.domain.core.usecase.playlistMusic.removePlaylistM
 import lombok.AllArgsConstructor;
 import org.com.mplayer.player.domain.core.entity.Music;
 import org.com.mplayer.player.domain.core.entity.Playlist;
+import org.com.mplayer.player.domain.core.entity.PlaylistMusic;
 import org.com.mplayer.player.domain.core.usecase.common.PlaylistMusicNotFoundException;
 import org.com.mplayer.player.domain.core.usecase.common.exception.MusicNotFoundException;
 import org.com.mplayer.player.domain.core.usecase.common.exception.PlaylistNotFoundException;
@@ -29,7 +30,9 @@ public class RemovePlaylistMusicUsecase implements RemovePlaylistMusicUsecasePor
 
         Playlist playlist = findPlaylist(playlistId, user.getId().toString());
         Music music = findMusic(user.getId().toString(), musicId);
+        PlaylistMusic playlistMusic = findPlaylistMusic(playlist.getId(), music.getId());
         removePlaylistMusic(playlist, music);
+        updatePositionsAfterRemoval(playlistMusic, playlist.getId());
     }
 
     private FindUserExternalProfileOutputPort findUser() {
@@ -44,11 +47,15 @@ public class RemovePlaylistMusicUsecase implements RemovePlaylistMusicUsecasePor
         return musicDataProviderPort.findByIdAndUserId(musicId, userId).orElseThrow(MusicNotFoundException::new);
     }
 
-    private void removePlaylistMusic(Playlist playlist, Music music) {
-        int playlistMusicRemoved = playlistMusicDataProviderPort.removeByPlaylistAndMusic(playlist.getId(), music.getId());
+    private PlaylistMusic findPlaylistMusic(Long playlistId, Long musicId) {
+        return playlistMusicDataProviderPort.findByPlaylistAndMusic(playlistId, musicId).orElseThrow(PlaylistMusicNotFoundException::new);
+    }
 
-        if (playlistMusicRemoved == 0) {
-            throw new PlaylistMusicNotFoundException();
-        }
+    private void removePlaylistMusic(Playlist playlist, Music music) {
+        playlistMusicDataProviderPort.removeByPlaylistAndMusic(playlist.getId(), music.getId());
+    }
+
+    private void updatePositionsAfterRemoval(PlaylistMusic playlistMusic, Long playlistId) {
+        playlistMusicDataProviderPort.updateDecreasePositionsHigher(playlistId, playlistMusic.getPosition());
     }
 }

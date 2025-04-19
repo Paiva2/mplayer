@@ -30,5 +30,12 @@ public interface PlaylistMusicRepository extends JpaRepository<PlaylistMusicEnti
     void deleteAllByPlaylistId(Long playlistId);
 
     @Modifying
-    int deleteByPlaylistIdAndMusicId(Long playlistId, Long musicId);
+    void deleteByPlaylistIdAndMusicId(Long playlistId, Long musicId);
+
+    @Modifying
+    @Query("update PlaylistMusicEntity plm " +
+        "set plm.position = plm.position - 1 " +
+        "where plm.position > :position " +
+        "and plm.playlist.id = :playlistId")
+    void updatePositionsDecreasingByPlaylistIdAndPosition(Long playlistId, Integer position);
 }

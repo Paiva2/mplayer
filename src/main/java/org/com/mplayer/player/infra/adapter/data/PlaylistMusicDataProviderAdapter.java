@@ -31,7 +31,7 @@ public class PlaylistMusicDataProviderAdapter implements PlaylistMusicDataProvid
 
     @Override
     public PageData<PlaylistMusic> findAllByPlaylist(Long playlistId, int page, int size) {
-        Pageable pageable = PageRequest.of(page - 1, size, Sort.Direction.DESC, "createdAt");
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.Direction.ASC, "position");
         Page<PlaylistMusicEntity> playlistMusic = repository.findAllByPlaylistId(playlistId, pageable);
 
         return new PageData<>(
@@ -61,7 +61,12 @@ public class PlaylistMusicDataProviderAdapter implements PlaylistMusicDataProvid
     }
 
     @Override
-    public int removeByPlaylistAndMusic(Long playlistId, Long musicId) {
-        return repository.deleteByPlaylistIdAndMusicId(playlistId, musicId);
+    public void removeByPlaylistAndMusic(Long playlistId, Long musicId) {
+        repository.deleteByPlaylistIdAndMusicId(playlistId, musicId);
+    }
+
+    @Override
+    public void updateDecreasePositionsHigher(Long playlistId, Integer position) {
+        repository.updatePositionsDecreasingByPlaylistIdAndPosition(playlistId, position);
     }
 }

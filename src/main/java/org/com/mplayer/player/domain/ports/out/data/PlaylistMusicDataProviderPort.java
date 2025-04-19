@@ -16,5 +16,7 @@ public interface PlaylistMusicDataProviderPort {
 
     void removeAllByPlaylist(Long playlistId);
 
-    int removeByPlaylistAndMusic(Long playlistId, Long musicId);
+    void removeByPlaylistAndMusic(Long playlistId, Long musicId);
+
+    void updateDecreasePositionsHigher(Long playlistId, Integer position);
 }
