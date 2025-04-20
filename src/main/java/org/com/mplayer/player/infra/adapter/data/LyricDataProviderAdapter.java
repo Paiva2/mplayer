@@ -26,6 +26,14 @@ public class LyricDataProviderAdapter implements LyricDataProviderPort {
     }
 
     @Override
+    public Optional<Lyric> findByMusicId(Long musicId) {
+        Optional<LyricEntity> lyric = repository.findByMusicId(musicId);
+        if (lyric.isEmpty()) return Optional.empty();
+
+        return Optional.of(mapper.toDomain(lyric.get()));
+    }
+
+    @Override
     public Lyric persist(Lyric lyric) {
         LyricEntity newLyric = repository.save(mapper.toPersistence(lyric));
 

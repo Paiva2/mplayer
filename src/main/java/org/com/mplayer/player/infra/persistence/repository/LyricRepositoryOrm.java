@@ -15,6 +15,8 @@ public interface LyricRepositoryOrm extends JpaRepository<LyricEntity, Long> {
         "and mus.title = :title")
     Optional<LyricEntity> findByArtistAndMusicTitle(@Param("artist") String artist, @Param("title") String title);
 
+    Optional<LyricEntity> findByMusicId(Long musicId);
+
     @Modifying
     void deleteByMusicId(Long musicId);
 }

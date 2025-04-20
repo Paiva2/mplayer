@@ -7,6 +7,8 @@ import java.util.Optional;
 public interface LyricDataProviderPort {
     Optional<Lyric> findLyricByArtistAndMusicTitle(String artist, String trackTitle);
 
+    Optional<Lyric> findByMusicId(Long musicId);
+
     Lyric persist(Lyric lyric);
 
     void removeByMusicId(Long musicId);
