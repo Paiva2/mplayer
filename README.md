@@ -1,4 +1,4 @@
-## mPlayer :headphones: - In progress
+## mPlayer :headphones:
 
 ### Features
 
